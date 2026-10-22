@@ -19,6 +19,9 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 20:30 [cursor-agent-0] Step 1 on feat/step1-scaffold verified (typecheck, lint, build, browser Ask/Announce/panels) and Gate 4 approved. PR next.
 - 20:29 [cursor-agent-0] Pinned the default theme to light. Dark tokens remain under `:root.dark` and no longer follow `prefers-color-scheme`.
 - 20:35 [cursor-agent-0] Split the UI into Simple (default: ask once, three answers) and Workspace (the current Ask/Announce + side menu).
+- 20:42 [cursor-agent-0] browser-ui-qa Simple+Workspace: 1280 OK · 390 OK · console 0 · overflow 0 · keyboard tabs/Announce/Library/Open Workspace 6/6 · vs mockup: Simple is new, Workspace matches.
+- 20:43 [cursor-agent-0] Simple now shows only question, knowledge graph, known answer, and where to post. Graph extracted for reuse in Workspace Experts.
+- 20:47 [cursor-agent-0] browser-ui-qa Simple graph: 1280 OK · 390 OK · overflow 0 · Workspace Experts graph still opens.
 
 ## Decision log
 Newest at the bottom. Slice ids in backticks.
@@ -30,3 +33,4 @@ Newest at the bottom. Slice ids in backticks.
 | 22 Oct 2026 | `step1` | Restyle shadcn `Button` with the mockup `.btn` classes | Stack requires shadcn; visual language is the paper-and-ink mockup, not the default zinc theme |
 | 22 Oct 2026 | `step1` | Pin the default theme to light; keep dark tokens under `:root.dark` | Demo and projector stay paper-and-ink; OS dark mode should not restyle the app |
 | 22 Oct 2026 | `simple-tab` | Name the full UI **Workspace**; land on **Simple** | Simple is the 20-second judge moment; Workspace keeps the locked 9-step demo path |
+| 22 Oct 2026 | `simple-tab` | Simple shows graph + known snippet + one channel, nothing else | Graph is the distinctive punch; the snippet is the answer; posting rules belong in Workspace |
