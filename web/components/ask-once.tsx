@@ -38,7 +38,11 @@ export function AskOnce({ view, onOpenWorkspace }: AskOnceProps) {
         </div>
         <KnowledgeGraph
           view={view}
-          caption="Circle size is answers on this topic. Graph by Cognee."
+          caption={
+            view.source === "live"
+              ? "Knowledge graph by Cognee Cloud"
+              : "Circle size is answers on this topic. Graph by Cognee."
+          }
         />
       </section>
 

@@ -9,3 +9,4 @@ node_modules/
 demo-video/
 data/raw/
 data/held-back/
+supabase/.temp/

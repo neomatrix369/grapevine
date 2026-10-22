@@ -8,6 +8,19 @@ export type Mode = "ask" | "announce";
 export type Panel = "compose" | "library" | "experts" | "posts" | "growth";
 export type CoverageStatus = "read" | "partial" | "unread";
 export type PostStatus = "awaiting" | "answered" | "replied" | "no-reply";
+export type DataSource = "sample" | "live";
+
+export type GraphNode = {
+  id: string;
+  label: string;
+  kind: string;
+};
+
+export type GraphEdge = {
+  src: string;
+  dst: string;
+  kind: string;
+};
 
 export type Person = {
   id: string;
@@ -59,6 +72,7 @@ export type MyPost = {
 };
 
 export type SampleView = {
+  source: DataSource;
   me: { name: string };
   question: string;
   announceDraft: string;
@@ -94,6 +108,8 @@ export type SampleView = {
     kpis: { label: string; value: string; note: string }[];
     weeks: { label: string; n: number }[];
   };
+  graphNodes: GraphNode[];
+  graphEdges: GraphEdge[];
 };
 
 const cleo: Person = {
@@ -157,6 +173,7 @@ const gita: Person = {
 };
 
 export const SAMPLE: SampleView = {
+  source: "sample",
   me: { name: "Robin Vale" },
   question: "How do people evaluate RAG retrieval quality before shipping?",
   announceDraft:
@@ -319,6 +336,8 @@ export const SAMPLE: SampleView = {
       { label: "15 Oct", n: 55 },
     ],
   },
+  graphNodes: [],
+  graphEdges: [],
 };
 
 export function awaitingCount(posts: MyPost[]): number {

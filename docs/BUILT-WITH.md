@@ -1,10 +1,10 @@
 # Built with
 
-Grapevine was planned with **Grok Bot**, which holds the context, and built with **Cursor**, which ships the code. **Supabase** and **Cognee** are decided sponsors: the schema and a labelled sample graph are in the repo; they are not live services yet. Commits are tagged `[grok-bot]`, `[cursor]` or `[mani]`, with trailer lines `Context-by:` and `Built-with:`. Every action is also logged in [`PROGRESS.md`](../PROGRESS.md).
+Grapevine was planned with **Grok Bot**, which holds the context, and built with **Cursor**, which ships the code. **Supabase** and **Cognee Cloud** are wired behind the header Sample/Live toggle. Commits are tagged `[grok-bot]`, `[cursor]` or `[mani]`, with trailer lines `Context-by:` and `Built-with:`. Every action is also logged in [`PROGRESS.md`](../PROGRESS.md).
 
 ## Shape now vs decided
 
-Live path is the localhost Next.js app in `web/`, filled from typed `SAMPLE` in `web/lib/sample-data.ts`. Supabase, Cognee, and Slack/Discord ingest are decided and not wired.
+Live path is the localhost Next.js app in `web/`. Sample fills from `web/lib/sample-data.ts`. Live reads Supabase and Cognee Cloud through `/api/community` when the header toggle is Live.
 
 ```mermaid
 C4Container
@@ -13,19 +13,21 @@ C4Container
   Person(member, "Member / organiser", "Uses the localhost browser")
 
   System_Boundary(grapevine, "Grapevine") {
-    Container(web, "Next.js Grapevine app", "web/", "IMPLEMENTED. Ask once and Workspace. Sample data from web/lib/sample-data.ts")
-    Container(sample, "SAMPLE module", "TypeScript", "IMPLEMENTED. Typed fictional sample in web/lib/sample-data.ts")
+    Container(web, "Next.js Grapevine app", "web/", "IMPLEMENTED. Ask once, Workspace, Sample/Live toggle")
+    Container(sample, "SAMPLE module", "TypeScript", "IMPLEMENTED. Typed fictional sample")
+    Container(api, "Server routes", "/api/community", "IMPLEMENTED. server-only Supabase + Cognee Cloud")
   }
 
-  System_Ext(supabase, "Supabase (decided, not live)", "Migration 0001_init.sql not applied. UI does not query it.")
-  System_Ext(cognee, "Cognee (decided, not live)", "Caption on static SVG only. No Cognee job.")
-  System_Ext(ingest, "Slack / Discord ingest (decided, not live)", "No data/ files.")
+  System_Ext(supabase, "Supabase", "Live rows when the schema is applied and loaded")
+  System_Ext(cognee, "Cognee Cloud", "Live graph for Experts, caption Cognee Cloud")
+  System_Ext(ingest, "Slack / Discord ingest", "reader/live, Grok Bot")
 
-  Rel(member, web, "1. Uses Ask once and Workspace", "HTTP localhost:3000")
-  Rel(web, sample, "2. Fills UI from SAMPLE", "in-process import")
-  Rel(web, supabase, "3. Decided, not wired")
-  Rel(web, cognee, "4. Decided, not wired")
-  Rel(ingest, web, "5. Decided, not wired")
+  Rel(member, web, "1. Uses Ask once, Workspace, Sample/Live", "HTTP localhost")
+  Rel(web, sample, "2. Sample toggle", "in-process import")
+  Rel(web, api, "3. Live toggle", "fetch /api/community")
+  Rel(api, supabase, "4. Channels, people, messages", "service role")
+  Rel(api, cognee, "5. Dataset graph", "X-Api-Key")
+  Rel(ingest, supabase, "6. Loader writes live rows")
 ```
 
 ## Grok Bot (SpaceXAI): the context holder
@@ -49,8 +51,8 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 | Next.js (App Router) + TypeScript + Tailwind + shadcn/ui app | `web/` |
 | Tagged commits from the local agent | `[cursor]` subjects and `Built-with: Cursor` trailers |
 | Design tokens (light default; dark opt-in via `.dark`) | `kit/design/tokens.css`, ported into `web/app/tokens.css` |
-| Ask once (graph, known answer, where to post) and Workspace (Ask/Announce, side menu) | `web/`, filled from `web/lib/sample-data.ts` |
-| Drafted Supabase schema + `route_question()` | `supabase/migrations/0001_init.sql` (not applied) |
+| Ask once, Workspace, Sample/Live toggle | `web/`. Sample from `web/lib/sample-data.ts`; Live from `/api/community` |
+| Drafted Supabase schema + `route_question()` | `supabase/migrations/0001_init.sql` |
 
 ## Supabase: the store and search
 **Decided 21:38 (Mani):** Supabase holds the **live** Slack and Discord messages read by Grok Bot (two weeks, public channels). The app reads Supabase; sample data is only a labelled fallback when it is empty.
@@ -62,12 +64,12 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 | Initial schema: channels, people, messages (generated `fts` tsvector + GIN, `embedding vector(384)`), rules, coverage, graph_nodes, graph_edges, my_posts | `supabase/migrations/0001_init.sql` |
 | Hybrid keyword + meaning search (SQL only) | `route_question(query_text, query_embedding)` in that migration |
 
-The Step 1 migration is **not applied**. `.env.example` lists the Supabase, Cognee Cloud, and `LLM_API_KEY` names; copy it to `.env.local` and never commit that file. `reader/live` reads the server keys. The UI does not call the database yet; `web/lib/env.ts` can read the public Supabase pair. Env is read only via `process.env`.
+`.env.example` lists the Supabase, Cognee Cloud, and `LLM_API_KEY` names; copy it to `.env.local` at the repo root and never commit that file. Live mode uses `SUPABASE_SERVICE_ROLE_KEY` only in `server-only` modules. Env is read only via `process.env`.
 
 ## Cognee Cloud: the knowledge graph
 **Decided 21:43 (Mani):** Cognee **Cloud** (hosted), replacing the earlier local Cognee 1.6.5 plan. The ingest on `feat/community-read` adds the live messages to the Cognee Cloud dataset `grapevine` (`POST /api/v1/add`, then `POST /api/v1/cognify`). The app reads the graph and graph search server-side (`POST /api/v1/search`, dataset graph endpoint) with `X-Api-Key` from `COGNEE_API_KEY`. Build brief: `docs/planning/07-live-data-build.md`.
 
-**In the app now:** a static SVG in `web/components/knowledge-graph.tsx`, labelled "Graph by Cognee." It switches to Cognee Cloud data when Cursor lands the brief. Cognee Cloud key names are in `.env.example`.
+**In the app now:** `web/components/knowledge-graph.tsx` draws Cognee Cloud / Supabase nodes when Live is selected, and the sample people layout when Sample is selected. Caption on Live is "Knowledge graph by Cognee Cloud".
 
 ## Zero (stretch)
 Only used if the CRM stretch goal is built.

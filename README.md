@@ -5,7 +5,7 @@ Ask once. See what's known, who knows it, and where to post.
 Built for the [Grok Bot Community Engineering London Hackathon](https://luma.com/eveur09a) (22 Oct 2026). Source: [neomatrix369/grapevine](https://github.com/neomatrix369/grapevine). Who built it, and where: [docs/BUILT-WITH.md](docs/BUILT-WITH.md). Log: [PROGRESS.md](PROGRESS.md).
 
 ## What it does
-Two tabs on localhost: **Ask once** (default: question, graph, known snippet, where to post) and **Workspace** (Ask/Announce, side menu for Library, Experts, My posts, Growth). The UI is filled from typed sample data in [`web/lib/sample-data.ts`](web/lib/sample-data.ts). Live data is the decided target (22 Oct 21:45): Grok Bot loads Slack + Discord into [Supabase](https://supabase.com) and [Cognee](https://www.cognee.ai) Cloud; Cursor wires the app per [`docs/planning/07-live-data-build.md`](docs/planning/07-live-data-build.md). Sample data remains a labelled fallback.
+Two tabs on localhost: **Ask once** (default: question, graph, known snippet, where to post) and **Workspace** (Ask/Announce, side menu for Library, Experts, My posts, Growth). The header **Sample / Live** toggle switches source. Sample is typed data in [`web/lib/sample-data.ts`](web/lib/sample-data.ts). Live reads [Supabase](https://supabase.com) and [Cognee](https://www.cognee.ai) Cloud server-side (`/api/community`). If Live is empty or unreachable, the toggle stays on Live and says so; it does not silently swap back to Sample. Ingest remains [`reader/live/`](reader/live/). Brief: [`docs/planning/07-live-data-build.md`](docs/planning/07-live-data-build.md).
 
 ## Run it
 ```bash
@@ -14,12 +14,12 @@ cd web && pnpm install && pnpm dev
 Localhost only ([http://localhost:3000](http://localhost:3000)). Copy [`.env.example`](.env.example) to `.env.local` (never commit it). App notes: [`web/README.md`](web/README.md). Live ingest: [`reader/live/`](reader/live/).
 
 ## Env
-Copy [`.env.example`](.env.example) to `.env.local`. Names only below — never commit values. The UI still uses sample data until [`07-live-data-build.md`](docs/planning/07-live-data-build.md) is landed. Do not apply [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) until the Supabase keys are filled.
+Copy [`.env.example`](.env.example) to `.env.local` at the repo root (Next loads it from there). Names only below — never commit values. Sample/Live is a header toggle. Live needs the Supabase schema applied and rows loaded by [`reader/live/`](reader/live/).
 
 | Group | Keys | Status |
 |---|---|---|
 | Supabase | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL` | Public pair readable in the app. Service role and DB URL are server-only (`reader/live`). Migration not applied |
-| Cognee Cloud | `COGNEE_API_KEY`, `COGNEE_BASE_URL`, `COGNEE_TENANT_ID`, `COGNEE_DATASET` (`grapevine`) | Server-only. Ingest in `reader/live`. App wiring is the 07 brief |
+| Cognee Cloud | `COGNEE_API_KEY`, `COGNEE_BASE_URL`, `COGNEE_TENANT_ID`, `COGNEE_DATASET` (`grapevine`) | Server-only. Ingest in `reader/live`. Live toggle reads the graph via `/api/community` |
 | LLM | `LLM_API_KEY` | Ingest only; the app does not need it |
 
 ## Commands
