@@ -1,15 +1,12 @@
 {
-  "name": "mockup",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "name": "grapevine-mockup",
+  "private": true,
+  "description": "Grapevine UI mockups (fictional sample data) and the script that renders them",
   "type": "commonjs",
+  "scripts": {
+    "render": "node render.mjs",
+    "contact-sheet": "python3 contact-sheet.py"
+  },
   "dependencies": {
     "playwright-core": "^1.64.1"
   }
