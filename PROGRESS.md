@@ -12,3 +12,5 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 19:53 [grok-bot] Created the private GitHub repo and pushed main.
 - 19:58 [grok-bot] Wrote docs/BUILT-WITH.md and this log.
 - 20:02 [grok-bot] Added the branch-and-PR rule for all agents (AGENTS.md, .cursor/rules/git-workflow.mdc).
+- 20:05 [cursor-agent-0] Started Step 1 on feat/step1-scaffold: Next.js scaffold in web/, tokens from kit/design/tokens.css, one-screen shell. App is landing on this branch.
+- 20:22 [cursor-agent-0] supabase/migrations/0001_init.sql (schema + route_question hybrid RRF) landing on this branch. Not applied; Supabase keys still empty.
