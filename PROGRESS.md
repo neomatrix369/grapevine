@@ -11,3 +11,4 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 19:45 [grok-bot] Set up git, .gitignore (secrets ignored) and .env.example; wrote the first Cursor build prompt.
 - 19:53 [grok-bot] Created the private GitHub repo and pushed main.
 - 19:58 [grok-bot] Wrote docs/BUILT-WITH.md and this log.
+- 20:02 [grok-bot] Added the branch-and-PR rule for all agents (AGENTS.md, .cursor/rules/git-workflow.mdc).

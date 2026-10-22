@@ -1,0 +1,11 @@
+---
+description: Branches and pull requests before anything reaches main
+alwaysApply: true
+---
+# Git workflow
+- Never commit directly to `main`. Start each piece of work on its own branch from up-to-date `main`: `feat/<short-name>`, `fix/<short-name>` or `docs/<short-name>`.
+- Commit in small steps. Every message starts with `[cursor]` (or `[grok-bot]` / `[mani]`) and ends with trailer lines such as `Built-with: Cursor`, `Built-with: Supabase` or `Context-by: Grok Bot`.
+- Before opening a PR: the app builds, typechecks and tests pass, and `.env.local` and other secrets are not staged.
+- Push the branch and open a PR with `gh pr create --base main`. The PR body covers what changed, how it was checked, and which demo step it serves.
+- Merge only after the checks pass, using `gh pr merge --squash --delete-branch`. Keep the `[cursor]` prefix and the trailers in the squash message.
+- Never force-push `main` or rewrite history that is already pushed.
