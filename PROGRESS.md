@@ -40,3 +40,4 @@ Newest at the bottom. Slice ids in backticks.
 | 22 Oct 2026 | `simple-tab` | Ask once shows graph + known snippet + one channel, nothing else | Graph is the distinctive punch; the snippet is the answer; posting rules belong in Workspace |
 | 22 Oct 2026 | `ask-once-name` | Default tab label is **Ask once** | Simple named difficulty; Ask once is the job |
 | 22 Oct 2026 | `docs-sync` | Current-truth docs name sample data, unapplied migration, and Cognee caption; planning files stay decided snapshots | Judging proof must not claim ingest, live search, or a Cognee job that are not in the repo |
+- 21:45 BST [grok-bot] Live community read: read-only CDP reader (Slack 9222 / Discord 9223, loopback), Supabase loader (channels, people, messages + gte-small 384-d embeddings, coverage, graph) and Cognee Cloud ingest in reader/live/. Raw text stays out of git.

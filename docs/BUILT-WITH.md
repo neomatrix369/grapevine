@@ -69,3 +69,4 @@ The Step 1 migration is **not applied**: Supabase keys in `.env.local` are still
 
 ## Zero (stretch)
 Only used if the CRM stretch goal is built.
+| Grok Bot | Live Slack + Discord read (read-only, CDP), Supabase load + embeddings, Cognee Cloud (hosted, sponsor) add/cognify/graph via X-Api-Key | reader/live/ (PR feat/community-read) |
