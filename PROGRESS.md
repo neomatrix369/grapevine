@@ -26,8 +26,9 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 21:04 [cursor-agent-0] browser-ui-qa Ask once+Workspace: 1280 OK · 390 OK · overflow 0 · tabs Ask once/Workspace + Open Workspace · vs mockup: Ask once is the 20s path, Workspace matches.
 - 21:19 [cursor-agent-0] Synced current-truth docs to the sample-data app: README, BUILT-WITH, HANDOFF, AGENTS, 04/06/00, web/README, kit token header. Planning interview left as decided snapshots.
 - 21:22 [cursor-agent-0] Commands quick-ref in README; 04-scope Owner/Done-when overlay from code; C4 now-vs-decided in BUILT-WITH.
+- 21:48 [grok-bot] Recorded Mani's 21:33–21:45 decisions: live Slack/Discord data into Supabase, Cognee Cloud (not local), sample only as labelled fallback. Added docs/planning/07-live-data-build.md for Cursor and Cognee/LLM key names to .env.example.
 - 21:54 [cursor-agent-0] README links: Luma event, GitHub repo, sponsors (Grok Bot, Cursor, Supabase, Cognee, Zero), stack, and in-repo docs/mockup paths.
-- 22:01 [cursor-agent-0] README Env section from `.env.example`: Supabase, LLM, and Cognee keys; still placeholders, not wired.
+- 22:01 [cursor-agent-0] README Env section from `.env.example`: Supabase, Cognee Cloud, and LLM keys.
 
 ## Decision log
 Newest at the bottom. Slice ids in backticks.
@@ -42,3 +43,4 @@ Newest at the bottom. Slice ids in backticks.
 | 22 Oct 2026 | `simple-tab` | Ask once shows graph + known snippet + one channel, nothing else | Graph is the distinctive punch; the snippet is the answer; posting rules belong in Workspace |
 | 22 Oct 2026 | `ask-once-name` | Default tab label is **Ask once** | Simple named difficulty; Ask once is the job |
 | 22 Oct 2026 | `docs-sync` | Current-truth docs name sample data, unapplied migration, and Cognee caption; planning files stay decided snapshots | Judging proof must not claim ingest, live search, or a Cognee job that are not in the repo |
+- 21:45 BST [grok-bot] Live community read: read-only CDP reader (Slack 9222 / Discord 9223, loopback), Supabase loader (channels, people, messages + gte-small 384-d embeddings, coverage, graph) and Cognee Cloud ingest in reader/live/. Raw text stays out of git.

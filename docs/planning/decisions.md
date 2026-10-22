@@ -22,3 +22,9 @@ Answers marked "Draft (fallback)" in files 01 to 06 are not decisions yet. Log e
 | 22 Oct 19:31 | Problem (file 01) | Five drafts kept; statement extended to include organisers | Mani | Organisers are now part of the product |
 | 22 Oct 19:33 | Name, users, end card (files 02/03) | Grapevine; drafts kept; end card shows build proof | Mani | Proof is a judging criterion |
 | 22 Oct 19:34 | Time, screens, mockups (files 04/05) | 2 h 15 left; agreed one-screen layout; earlier mockups copied fresh | Mani | Planning ran into build time; layout agreed at 19:08 |
+| 22 Oct 21:33 | Data source | The app uses **live** Slack + Discord data, not sample data; sample is a labelled fallback only | Mani | The spec promises real community knowledge |
+| 22 Oct 21:35 | How to read | Desktop apps over CDP (9222 Slack, 9223 Discord, loopback only), read-only, public channels, two weeks back, apps restored after | Mani | No bot tokens; nothing posted |
+| 22 Oct 21:38 | Where live data lives | Supabase (`0001_init.sql`, gte-small 384-d + FTS, `route_question()`); app reads Supabase; raw text never in git | Mani | Supabase is the store-and-search sponsor |
+| 22 Oct 21:40 | LLM key | `LLM_API_KEY` added to `.env.local` by Mani for graph extraction | Mani | Graph extraction calls an LLM |
+| 22 Oct 21:43 | Cognee mode | **Cognee Cloud** (hosted), not local Cognee 1.6.5; `COGNEE_API_KEY` in `.env.local` | Mani | Use the sponsor's cloud as part of the hackathon |
+| 22 Oct 21:45 | Who builds what | Grok Bot: reader + ingest (`feat/community-read`). Cursor: Supabase data layer, source label, Cognee Cloud client, Experts graph (`07-live-data-build.md`) | Mani | Parallel work without branch collisions |

@@ -7,3 +7,5 @@ node_modules/
 .cursor-runs/
 .omc/
 demo-video/
+data/raw/
+data/held-back/
