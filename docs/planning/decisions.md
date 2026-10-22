@@ -28,3 +28,4 @@ Answers marked "Draft (fallback)" in files 01 to 06 are not decisions yet. Log e
 | 22 Oct 21:40 | LLM key | `LLM_API_KEY` added to `.env.local` by Mani for graph extraction | Mani | Graph extraction calls an LLM |
 | 22 Oct 21:43 | Cognee mode | **Cognee Cloud** (hosted), not local Cognee 1.6.5; `COGNEE_API_KEY` in `.env.local` | Mani | Use the sponsor's cloud as part of the hackathon |
 | 22 Oct 21:45 | Who builds what | Grok Bot: reader + ingest (`feat/community-read`). Cursor: Supabase data layer, source label, Cognee Cloud client, Experts graph (`07-live-data-build.md`) | Mani | Parallel work without branch collisions |
+| 22 Oct 22:14 | Sample vs live | Explicit header toggle (Sample / Live). Live always reads Supabase + Cognee Cloud; it does not auto-swap to sample | Mani | Demo must be able to show both sources |
