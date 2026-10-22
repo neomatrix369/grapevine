@@ -1,0 +1,87 @@
+/* design/tokens.css: the ONLY place for colour, font, radius, spacing and motion values.
+   Imported by app/globals.css (Tailwind v4 `@theme inline` maps these to utilities).
+   Calm paper-and-ink palette, accent darkened for text. Light theme only.
+   Names are by meaning, not hue. Do not regenerate this file (no /frontend-advisor, no /ui-ux-pro-max).
+   Contrast pairs below are checked by scripts/check.sh (WCAG AA 4.5:1 for text). */
+
+:root {
+  /* Surfaces */
+  --bg: #efebe3;          /* bone paper */
+  --card: #f7f5f0;
+  --muted: #e6e1d7;       /* quiet fills, table stripes */
+  --rule: #d9d3c7;        /* borders, dividers */
+
+  /* Text */
+  --ink: #111110;         /* source text, headings */
+  --ink-muted: #5e5850;   /* model-written text, secondary labels (passes on bg, card, muted, mark) */
+
+  /* Meaning */
+  --signal: #e8461a;      /* "the answer" / match: FILLS and numbers >= 24px only (3.32:1 as text) */
+  --signal-ink: #a8360f;  /* signal as text: 5.52:1 on bg */
+  --signal-soft: #f6d9cc; /* faint match highlight behind ink text */
+  --control: #2e5b4f;     /* buttons, toggles, links that act */
+  --on-control: #ffffff;
+  --you: #284b7a;         /* the demo user in graph and Me panel */
+  --mark: #f2e3a0;        /* neutral highlighter, always captioned */
+  --warn: #3d3935;        /* warnings and failed checks are ink, never signal or red */
+  --warn-soft: #e3ded4;
+  --focus: #111110;       /* focus ring */
+
+  /* Coverage states (also shown by pattern + text, never colour alone) */
+  --cov-read: #2e5b4f;
+  --cov-partial: #8fa89f;
+  --cov-unread: #e6e1d7;
+
+  /* Type: three families, loaded with next/font in app/layout.tsx */
+  --font-display: var(--font-instrument-serif, "Instrument Serif"), Georgia, serif;
+  --font-body: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono, "JetBrains Mono"), ui-monospace, monospace;
+
+  --text-label: 0.75rem;       /* 12px mono uppercase labels, +0.05em tracking */
+  --text-body: 0.9375rem;      /* 15px body and main input; never below 14px */
+  --text-small: 0.875rem;      /* 14px */
+  --text-h2: 1.25rem;
+  --text-display: 1.75rem;     /* 28px headings, -0.02em, text-wrap: balance */
+  --text-number-lg: 1.5rem;    /* 24px, the smallest size --signal may be used as text */
+  --tracking-label: 0.05em;
+  --tracking-display: -0.02em;
+
+  /* Shape and space */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --shadow-card: 0 1px 0 rgb(17 17 16 / 0.04), 0 1px 3px rgb(17 17 16 / 0.06);
+
+  /* Motion: three tiers, ease-out, no bounce (mirrors lib/motion.ts) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-micro: 150ms;   /* hovers, icon swaps */
+  --dur-ui: 200ms;      /* toggles, panels, graph focus */
+  --dur-entrance: 450ms;/* results arriving, heatmap fill */
+  --stagger: 50ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-micro: 0ms; --dur-ui: 0ms; --dur-entrance: 0ms; --stagger: 0ms; }
+}
+
+/* contrast: --ink on --bg */
+/* contrast: --ink on --card */
+/* contrast: --ink on --mark */
+/* contrast: --ink on --signal-soft */
+/* contrast: --ink-muted on --bg */
+/* contrast: --ink-muted on --card */
+/* contrast: --ink-muted on --muted */
+/* contrast: --ink-muted on --mark */
+/* contrast: --signal-ink on --bg */
+/* contrast: --signal-ink on --card */
+/* contrast: --control on --bg */
+/* contrast: --on-control on --control */
+/* contrast: --you on --bg */
+/* contrast: --warn on --warn-soft */
+/* contrast: --on-control on --cov-read */
