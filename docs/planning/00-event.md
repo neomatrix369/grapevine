@@ -11,6 +11,8 @@ Acquisition · a collab engine between communities · the event stack · activat
 Supabase · Cognee · Zero · SpaceXAI (Grok Bot) · Cursor. Prizes: Cursor Ultra (3, 2 or 1 months per person) plus Supabase credits.
 
 ## Judging criteria, and where Grapevine answers each
+These are the answers we decided to aim for, not a claim that hybrid search or real data already run. Current behaviour is in `docs/BUILT-WITH.md`.
+
 | Criterion | Where we show it |
 |---|---|
 | Technical execution | Hybrid search, the knowledge graph, live coverage updates, working end to end on real data |

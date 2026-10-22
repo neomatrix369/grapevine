@@ -3,6 +3,8 @@ Mockup: `mockup/grapevine.html` (open in a browser; URL params below). Renders: 
 
 **Rule:** one screen. The compose box is the focal point; everything else opens in place next to it, so the question never leaves the screen.
 
+The shipped app lands on **Ask once** (question, graph, known snippet, where to post). **Workspace** is this one-screen layout.
+
 ## The one screen
 | Area | What it shows | Notes |
 | --- | --- | --- |
