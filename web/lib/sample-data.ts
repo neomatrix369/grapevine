@@ -3,7 +3,7 @@
  * Mirrors mockup/mock-data.js enough to fill the one-screen shell.
  */
 
-export type AppView = "simple" | "workspace";
+export type AppView = "ask-once" | "workspace";
 export type Mode = "ask" | "announce";
 export type Panel = "compose" | "library" | "experts" | "posts" | "growth";
 export type CoverageStatus = "read" | "partial" | "unread";

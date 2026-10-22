@@ -8,6 +8,8 @@
 
 **The one moment a judge must see in the first 20 seconds:**
 > **Decided 19:33 (Mani, kept fallback):** type a question once and see what's already known (library), who knows it (experts) and where to post it, with the rule that applies.
+>
+> **Updated 20:57:** that moment is the **Ask once** tab (default). The locked 9-step path below is **Workspace**.
 
 **Demo path (LOCKED 22 Oct 19:08, about 2 min):**
 > 1. Land: one screen, coverage line showing ("based on N of M channels, since {date}").

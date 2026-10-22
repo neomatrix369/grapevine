@@ -96,16 +96,16 @@ td.num,th.num{white-space:nowrap}
 .graph text.mono{font-family:var(--font-mono)}
 .badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
 
-/* Simple: question, graph, known answer, where to post. */
-.simple{width:100%;max-width:720px;margin:0 auto;padding:48px var(--space-6) 64px}
-.simple-graph{margin-top:28px}
-.simple-graph .ph .src{margin-left:auto}
-.simple-graph .caption{padding:0 18px 14px;margin-top:0}
-.simple-facts{margin-top:4px}
-.simple-facts section{padding:16px 2px;border-top:1px solid var(--rule)}
-.simple-facts section:first-child{border-top:0}
-.simple-facts .label{display:block;margin-bottom:6px}
-.simple-more{margin-top:16px}
+/* Ask once: question, graph, known answer, where to post. */
+.ask-once{width:100%;max-width:720px;margin:0 auto;padding:48px var(--space-6) 64px}
+.ask-once-graph{margin-top:28px}
+.ask-once-graph .ph .src{margin-left:auto}
+.ask-once-graph .caption{padding:0 18px 14px;margin-top:0}
+.ask-once-facts{margin-top:4px}
+.ask-once-facts section{padding:16px 2px;border-top:1px solid var(--rule)}
+.ask-once-facts section:first-child{border-top:0}
+.ask-once-facts .label{display:block;margin-bottom:6px}
+.ask-once-more{margin-top:16px}
 
 /* one screen: side menu | compose column | in-place panel */
 .shell{display:grid;grid-template-columns:176px minmax(0,1fr);min-height:calc(100vh - 56px)}
@@ -193,7 +193,7 @@ label.person{cursor:pointer}
   .hright .who,.hright .tag{display:none}
   .hright{gap:var(--space-2)}
   header{padding:0 16px;flex-wrap:wrap;height:auto;min-height:56px}
-  .simple{padding:24px 16px 32px}
+  .ask-once{padding:24px 16px 32px}
   .kpis{grid-template-columns:1fr 1fr}
   .brand.big{font-size:calc(var(--text-display) * 1.6)}
 }

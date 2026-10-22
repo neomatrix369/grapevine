@@ -2,23 +2,36 @@
 
 import { useState } from "react";
 
-import { SimpleAsk } from "@/components/simple-ask";
+import { AskOnce } from "@/components/ask-once";
 import { Button } from "@/components/ui/button";
 import { WorkspaceApp } from "@/components/workspace-app";
 import { SAMPLE, type AppView } from "@/lib/sample-data";
 
 const VIEWS: { id: AppView; label: string }[] = [
-  { id: "simple", label: "Simple" },
+  { id: "ask-once", label: "Ask once" },
   { id: "workspace", label: "Workspace" },
 ];
 
 export function GrapevineApp() {
   const view = SAMPLE;
-  const [appView, setAppView] = useState<AppView>("simple");
+  const [appView, setAppView] = useState<AppView>("ask-once");
   const [demoTick, setDemoTick] = useState(0);
 
   function playDemo() {
     setDemoTick((tick) => tick + 1);
+  }
+
+  function renderView() {
+    switch (appView) {
+      case "ask-once":
+        return <AskOnce key={demoTick} view={view} onOpenWorkspace={() => setAppView("workspace")} />;
+      case "workspace":
+        return <WorkspaceApp key={demoTick} />;
+      default: {
+        const _exhaustive: never = appView;
+        return _exhaustive;
+      }
+    }
   }
 
   return (
@@ -48,11 +61,7 @@ export function GrapevineApp() {
           </Button>
         </div>
       </header>
-      {appView === "simple" ? (
-        <SimpleAsk key={demoTick} view={view} onOpenWorkspace={() => setAppView("workspace")} />
-      ) : (
-        <WorkspaceApp key={demoTick} />
-      )}
+      {renderView()}
     </div>
   );
 }
