@@ -5,7 +5,7 @@ Ask once. See what's known, who knows it, and where to post.
 Who built it, and where: [docs/BUILT-WITH.md](docs/BUILT-WITH.md).
 
 ## What it does
-Two tabs on localhost: **Ask once** (default: question, graph, known snippet, where to post) and **Workspace** (Ask/Announce, side menu for Library, Experts, My posts, Growth). The UI is filled from typed sample data in `web/lib/sample-data.ts`. Hybrid search, Cognee, and community ingest are decided, not running yet.
+Two tabs on localhost: **Ask once** (default: question, graph, known snippet, where to post) and **Workspace** (Ask/Announce, side menu for Library, Experts, My posts, Growth). The UI is filled from typed sample data in `web/lib/sample-data.ts`. Live data is the decided target (22 Oct 21:45): Grok Bot loads Slack + Discord into Supabase and Cognee Cloud; Cursor wires the app per `docs/planning/07-live-data-build.md`. Sample data remains a labelled fallback.
 
 ## Run it
 ```bash
