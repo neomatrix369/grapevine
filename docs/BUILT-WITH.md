@@ -60,12 +60,12 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 | Initial schema: channels, people, messages (generated `fts` tsvector + GIN, `embedding vector(384)`), rules, coverage, graph_nodes, graph_edges, my_posts | `supabase/migrations/0001_init.sql` |
 | Hybrid keyword + meaning search (SQL only) | `route_question(query_text, query_embedding)` in that migration |
 
-The Step 1 migration is **not applied**: Supabase keys in `.env.local` are still empty (see `.env.example`). The UI does not call the database; `web/lib/env.ts` can read keys but nothing uses them yet. Env is read only via `process.env`. Do not commit `.env.local`.
+The Step 1 migration is **not applied**. `.env.example` lists the Supabase, LLM, and Cognee keys; copy it to `.env.local` and never commit that file. The UI does not call the database; `web/lib/env.ts` can read the public Supabase pair but nothing uses it yet. LLM and Cognee keys are not read. Env is read only via `process.env`.
 
 ## Cognee: the knowledge graph
 **Decided:** build the people, topics, channels and threads graph locally on the Mac; the Experts graph view reads it.
 
-**In the app now:** a static SVG in `web/components/knowledge-graph.tsx`, labelled "Graph by Cognee." There is no Cognee package or local graph job.
+**In the app now:** a static SVG in `web/components/knowledge-graph.tsx`, labelled "Graph by Cognee." There is no Cognee package or local graph job. Cognee keys exist in `.env.example` and are not read.
 
 ## Zero (stretch)
 Only used if the CRM stretch goal is built.

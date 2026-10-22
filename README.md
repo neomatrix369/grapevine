@@ -11,7 +11,16 @@ Two tabs on localhost: **Ask once** (default: question, graph, known snippet, wh
 ```bash
 cd web && pnpm install && pnpm dev
 ```
-Localhost only ([http://localhost:3000](http://localhost:3000)). Copy [`.env.example`](.env.example) to `.env.local` (never commit it). Do not apply [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) until keys are filled. App notes: [`web/README.md`](web/README.md).
+Localhost only ([http://localhost:3000](http://localhost:3000)). Copy [`.env.example`](.env.example) to `.env.local` (never commit it). App notes: [`web/README.md`](web/README.md).
+
+## Env
+Placeholders only. The UI still uses sample data. [`web/lib/env.ts`](web/lib/env.ts) can read the public Supabase pair; nothing calls the database, an LLM, or Cognee yet. Do not apply [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) until the Supabase keys are filled.
+
+| Group | Keys | Status |
+|---|---|---|
+| Supabase | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL` | Decided. Public pair readable; migration not applied |
+| LLM | `LLM_API_KEY`, `LLM_MODEL` | Decided, not wired |
+| Cognee | `COGNEE_API_KEY`, `COGNEE_TENANT_ID`, `COGNEE_BASE_URL`, `COGNEE_DATASET` | Decided, not wired |
 
 ## Commands
 Quick reference. Run from `web/`. Localhost demo only.

@@ -27,6 +27,7 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 21:19 [cursor-agent-0] Synced current-truth docs to the sample-data app: README, BUILT-WITH, HANDOFF, AGENTS, 04/06/00, web/README, kit token header. Planning interview left as decided snapshots.
 - 21:22 [cursor-agent-0] Commands quick-ref in README; 04-scope Owner/Done-when overlay from code; C4 now-vs-decided in BUILT-WITH.
 - 21:54 [cursor-agent-0] README links: Luma event, GitHub repo, sponsors (Grok Bot, Cursor, Supabase, Cognee, Zero), stack, and in-repo docs/mockup paths.
+- 22:01 [cursor-agent-0] README Env section from `.env.example`: Supabase, LLM, and Cognee keys; still placeholders, not wired.
 
 ## Decision log
 Newest at the bottom. Slice ids in backticks.
