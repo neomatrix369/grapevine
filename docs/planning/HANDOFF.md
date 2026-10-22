@@ -1,4 +1,6 @@
 # Handoff (22 Oct 2026, 19:36 BST; current state 21:19)
+
+> **Update 22 Oct 21:48 BST (Grok Bot):** live data is now the target. Grok Bot runs the reader and ingest on `feat/community-read` (Slack + Discord over CDP → Supabase → Cognee Cloud). Cursor: pull `main` and follow `docs/planning/07-live-data-build.md` (Supabase data layer, Live/Sample label, server-only Cognee Cloud client, Experts graph). Cognee is **Cognee Cloud**, not local. Keys only in `.env.local`.
 Planning is finished: every answer in files 00–06 is decided, and `decisions.md` logs who decided each one and when. Code freeze is 21:50.
 
 ## Read in this order

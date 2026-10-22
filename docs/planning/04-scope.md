@@ -5,6 +5,11 @@
 
 **Status (22 Oct 21:19, after Step 1):** Ask once + Workspace UI is implemented on typed sample data. Hybrid search, Cognee, ingest, live read, working copy-and-open, and video are still the decided target. Owner and Done when in the table overlay current main as of 22 Oct 2026 ~21:19 BST; item wording is the historical plan.
 
+**In scope now (decided 21:33–21:45, Mani):** live data replaces sample data as the demo source.
+- Grok Bot: read Slack + Discord (CDP, read-only, public, two weeks), load Supabase, send to Cognee Cloud (`feat/community-read`).
+- Cursor: Supabase-backed data layer, Live/Sample source label, server-only Cognee Cloud client, Experts graph from Cognee Cloud. Brief: `07-live-data-build.md`.
+- Sample data stays only as the labelled fallback when Supabase is empty.
+
 | Priority | Item (draft fallback) | Owner | Done when |
 |---|---|---|---|
 | Must | Compose box: best channel, who to tag, already answered | Cursor | IMPLEMENTED (sample) in Workspace Ask results |

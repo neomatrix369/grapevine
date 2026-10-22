@@ -30,7 +30,7 @@ The shipped app lands on **Ask once** (question, graph, known snippet, where to 
 - Under 2 answers nobody is listed as an expert (Experts list, Pick mentors, counts).
 
 ## End card
-Name, one-line pitch, "How it was built": Grok Bot (context), Cursor (build, tagged commits), Supabase (search, live updates), Cognee (graph); proof in `docs/BUILT-WITH.md`, `PROGRESS.md`, `docs/evidence/` and the tagged commits.
+Name, one-line pitch, "How it was built": Grok Bot (context), Cursor (build, tagged commits), Supabase (search, live updates), Cognee Cloud (graph); proof in `docs/BUILT-WITH.md`, `PROGRESS.md`, `docs/evidence/` and the tagged commits.
 
 ## Mockup URLs (`grapevine.html?...`)
 `state=empty|loading|ne` · `mode=announce` · `panel=library|experts|graph|posts|growth` · `read=1` (after the live channel read, demo step 7) · `end=1`.

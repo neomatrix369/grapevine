@@ -53,6 +53,8 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 | Drafted Supabase schema + `route_question()` | `supabase/migrations/0001_init.sql` (not applied) |
 
 ## Supabase: the store and search
+**Decided 21:38 (Mani):** Supabase holds the **live** Slack and Discord messages read by Grok Bot (two weeks, public channels). The app reads Supabase; sample data is only a labelled fallback when it is empty.
+
 **Decided:** Postgres with keyword plus meaning search (pgvector) combined in one `route_question()` hybrid RRF function, and live updates that drive the coverage view.
 
 | What is in the repo | Where to see it |
@@ -62,10 +64,10 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 
 The Step 1 migration is **not applied**: Supabase keys in `.env.local` are still empty (see `.env.example`). The UI does not call the database; `web/lib/env.ts` can read keys but nothing uses them yet. Env is read only via `process.env`. Do not commit `.env.local`.
 
-## Cognee: the knowledge graph
-**Decided:** build the people, topics, channels and threads graph locally on the Mac; the Experts graph view reads it.
+## Cognee Cloud: the knowledge graph
+**Decided 21:43 (Mani):** Cognee **Cloud** (hosted), replacing the earlier local Cognee 1.6.5 plan. The ingest on `feat/community-read` adds the live messages to the Cognee Cloud dataset `grapevine` (`POST /api/v1/add`, then `POST /api/v1/cognify`). The app reads the graph and graph search server-side (`POST /api/v1/search`, dataset graph endpoint) with `X-Api-Key` from `COGNEE_API_KEY`. Build brief: `docs/planning/07-live-data-build.md`.
 
-**In the app now:** a static SVG in `web/components/knowledge-graph.tsx`, labelled "Graph by Cognee." There is no Cognee package or local graph job.
+**In the app now:** a static SVG in `web/components/knowledge-graph.tsx`, labelled "Graph by Cognee." It switches to Cognee Cloud data when Cursor lands the brief.
 
 ## Zero (stretch)
 Only used if the CRM stretch goal is built.
