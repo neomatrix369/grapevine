@@ -6,24 +6,24 @@ import { KnowledgeGraph } from "@/components/knowledge-graph";
 import { Button } from "@/components/ui/button";
 import type { SampleView } from "@/lib/sample-data";
 
-type SimpleAskProps = {
+type AskOnceProps = {
   view: SampleView;
   onOpenWorkspace: () => void;
 };
 
-export function SimpleAsk({ view, onOpenWorkspace }: SimpleAskProps) {
+export function AskOnce({ view, onOpenWorkspace }: AskOnceProps) {
   const [draft, setDraft] = useState(view.question);
   const known = view.known;
 
   return (
-    <main className="simple" id="view-simple" role="tabpanel" aria-labelledby="tab-simple">
+    <main className="ask-once" id="view-ask-once" role="tabpanel" aria-labelledby="tab-ask-once">
       <h1>Ask once</h1>
       <div className="compose">
-        <label htmlFor="simple-q" className="sr-only">
+        <label htmlFor="ask-once-q" className="sr-only">
           Your question
         </label>
         <textarea
-          id="simple-q"
+          id="ask-once-q"
           rows={2}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
@@ -31,7 +31,7 @@ export function SimpleAsk({ view, onOpenWorkspace }: SimpleAskProps) {
         />
       </div>
 
-      <section className="panel simple-graph" aria-label="Who knows">
+      <section className="panel ask-once-graph" aria-label="Who knows">
         <div className="ph">
           <span className="label">Who knows</span>
           <span className="src">{view.topicLabel}</span>
@@ -42,7 +42,7 @@ export function SimpleAsk({ view, onOpenWorkspace }: SimpleAskProps) {
         />
       </section>
 
-      <div className="simple-facts">
+      <div className="ask-once-facts">
         <section>
           <span className="label">Already known</span>
           <p>
@@ -66,7 +66,7 @@ export function SimpleAsk({ view, onOpenWorkspace }: SimpleAskProps) {
         </section>
       </div>
 
-      <p className="simple-more">
+      <p className="ask-once-more">
         <button className="more" type="button" onClick={onOpenWorkspace}>
           Open Workspace
         </button>
