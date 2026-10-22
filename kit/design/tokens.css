@@ -1,10 +1,9 @@
-/* design/tokens.css: the ONLY place for colour, font, radius, spacing and motion values.
-   Imported by app/globals.css (Tailwind v4 `@theme inline` maps these to utilities).
+/* kit/design/tokens.css: SSOT for colour, font, radius, spacing and motion.
+   Mockups import this file. The Next app copies it to web/app/tokens.css (keep values in sync).
    Calm paper-and-ink palette, accent darkened for text. Light is the default theme.
    Dark tokens stay under :root.dark for an explicit opt-in; they do not follow prefers-color-scheme.
    Demo mode and the video stay on light for the projector.
-   Names are by meaning, not hue. Do not regenerate this file (no /frontend-advisor, no /ui-ux-pro-max).
-   Contrast pairs below are checked by scripts/check.sh (WCAG AA 4.5:1 for text). */
+   Names are by meaning, not hue. Do not regenerate this file (no /frontend-advisor, no /ui-ux-pro-max). */
 
 :root {
   color-scheme: light;

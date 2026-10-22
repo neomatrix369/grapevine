@@ -3,6 +3,8 @@
 **Stack:**
 > **Decided 19:28 (Mani, kept fallback):** Next.js, TypeScript, Tailwind and shadcn/ui; Supabase (Postgres, keyword + vector search); a force-directed graph library.
 
+**Status (22 Oct 21:19):** Next.js stack is in `web/`. Search is SQL in an unapplied migration. The graph is a static SVG, not a force-directed library and not a Cognee job.
+
 **Where agents run:**
 > **Decided 19:12 (Mani):** all local in Cursor on the Mac (see below).
 
@@ -28,16 +30,16 @@
 ## Sponsor proof: shown in the repo docs and the commits
 > **Decided 19:15 (Mani):** the proof lives in the git repo, not just in the demo.
 
-**Docs (in the repo)**
+**Docs (in the repo)** — this is the decided proof plan, not a claim that every item already exists. Current vs decided is in `docs/BUILT-WITH.md`.
 - `docs/BUILT-WITH.md`: one section per sponsor covering what it does in Grapevine, where in the code, and how to see it running.
-  - **Grok Bot:** read the communities and their rules, ran the planning interview (these files plus `decisions.md`), ran the ingest, and powers the "Read next" button through a routine.
-  - **Cursor:** built the app with local agents, following the project rules and skills in the repo, and applied the Supabase migrations through its Supabase connector.
-  - **Supabase:** schema, search function, live coverage updates.
-  - **Cognee:** the local graph job and the graph view.
+  - **Grok Bot:** (landed) planning interview, mockups, repo setup; (decided) community ingest and a "Read next" routine.
+  - **Cursor:** (landed) local agents built the `web/` app and authored `supabase/migrations/0001_init.sql`; (decided) apply that migration through the Supabase connector once keys exist. It has **not** been applied.
+  - **Supabase:** (landed) schema + `route_question()` in the migration file; (decided) live coverage updates against a running project.
+  - **Cognee:** (landed) graph view labelled Cognee; (decided) the local graph job the view will read.
   - **Zero:** only if the CRM stretch is built.
 - `docs/planning/`: a clean copy of these planning files, so the ideation trail is visible.
 - `PROGRESS.md`: a running log where every entry is tagged by who did it (`[grok-bot]`, `[cursor-agent-0]`, `[mani]`).
-- Screenshots in `docs/evidence/`: Grok Bot chat reading a channel, the local agents in Cursor, the Supabase dashboard, the Cognee graph build.
+- Screenshots in `docs/evidence/`: (decided) Grok Bot chat reading a channel, the local agents in Cursor, the Supabase dashboard, the Cognee graph build. **Now:** the mockup contact sheet only.
 
 **Commits**
 - Subject prefix by author: `[grok-bot] ...`, `[cursor] ...`, `[mani] ...`
