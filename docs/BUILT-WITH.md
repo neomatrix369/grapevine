@@ -16,10 +16,24 @@ Grapevine was planned with **Grok Bot**, which holds the context, and built with
 How to check: `git log --oneline --grep '\[grok-bot\]'` and `grep '\[grok-bot\]' PROGRESS.md`.
 
 ## Cursor: the builder
-Cursor's agent builds the app locally on the Mac from the prompts above, following the planning docs and the rules in the repo. It also applies the Supabase migrations. How to check: `git log --oneline --grep '\[cursor\]'` and the `[cursor-agent-0]` lines in `PROGRESS.md`.
+Cursor's local agent ships the app on the Mac from the prompts above, following the planning docs and the rules in the repo. Step 1 lands on `feat/step1-scaffold`. How to check: `git log --oneline --grep '\[cursor\]'` and the `[cursor-agent-0]` lines in `PROGRESS.md`.
+
+| What Cursor does | Where to see it |
+|---|---|
+| Next.js (App Router) + TypeScript + Tailwind + shadcn/ui app | `web/` |
+| Tagged commits from the local agent | `[cursor]` subjects and `Built-with: Cursor` trailers |
+| Design tokens (light/dark via `prefers-color-scheme`) | `kit/design/tokens.css`, ported into the `web/` theme |
+| One-screen shell (compose box, result rows, side menu, coverage line) | `web/` (Step 1) |
 
 ## Supabase: the store and search
-Postgres with keyword plus meaning search (pgvector) combined in one `route_question()` function, and live updates that drive the coverage view. Schema: `supabase/migrations/`.
+Postgres with keyword plus meaning search (pgvector) combined in one `route_question()` hybrid RRF function, and live updates that drive the coverage view.
+
+| What Supabase holds | Where to see it |
+|---|---|
+| Initial schema: channels, people, messages (generated `fts` tsvector + GIN, `embedding vector(384)`), rules, coverage, graph_nodes, graph_edges, my_posts | `supabase/migrations/0001_init.sql` |
+| Hybrid keyword + meaning search | `route_question(query_text, query_embedding)` in that migration |
+
+The Step 1 migration is **not applied yet**: Supabase keys in `.env.local` are still empty (see `.env.example`). Env is read only via `process.env`. Do not commit `.env.local`.
 
 ## Cognee: the knowledge graph
 Builds the people, topics, channels and threads graph locally on the Mac; the Experts graph view reads it and is labelled "Knowledge graph by Cognee".
