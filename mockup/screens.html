@@ -1,56 +1,16 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Grapevine screens: Topics, People, Announce (wireframes, sample data)</title>
-<link rel="stylesheet" href="../kit/design/tokens.css">
-<link rel="stylesheet" href="mock.css">
-<script src="mock-data.js"></script><script src="derive.js"></script><script src="views.js"></script>
-<style>
-.screen{border-bottom:8px solid var(--muted)}
-.wf-cap{display:flex;gap:12px;align-items:baseline;padding:10px 24px;background:var(--muted);flex-wrap:wrap}
-.wf-cap h1{font-size:var(--text-h2)}
-.stage{display:grid;grid-template-columns:minmax(0,1fr) 420px;min-height:760px}
-.ghostcol{padding:48px 32px;display:flex;flex-direction:column;gap:14px;max-width:640px;margin-left:auto;width:100%}
-.ph-block{background:var(--card);border:1px dashed var(--rule);border-radius:var(--radius-lg);color:var(--ink-muted);font-size:var(--text-small);padding:14px 16px}
-.dstatic{background:var(--card);border-left:1px solid var(--rule);min-width:0}
-.tabs span{padding:10px 0;font-size:var(--text-small);color:var(--ink-muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
-.tabs span.on{color:var(--ink);border-color:var(--ink);font-weight:500}
-.amain{max-width:720px;margin:0 auto;padding:48px 24px 64px}
-@media (max-width:900px){.stage{grid-template-columns:minmax(0,1fr)}.ghostcol{display:none}.dstatic{border-left:0}}
-@media (max-width:640px){.amain{padding:24px 16px 48px}.wf-cap{padding:10px 16px}}
-</style></head>
-<body>
-<section class="screen" id="topics" aria-labelledby="cap-topics">
-  <div class="wf-cap"><h1 class="h1" id="cap-topics">1. Topics library and cheat sheet</h1><span class="label">S13 + S14 + M11 + C3 · drawer tab</span></div>
-  <header><span class="brand">Grapevine</span><div class="hright"><span class="tag">Sample data</span><span class="btn ghost hide-sm">Details</span><span class="btn">Play demo</span></div></header>
-  <div class="stage"><div class="ghostcol" aria-hidden="true"><div class="ph-block">Ask column: see hero-simple.png</div></div>
-    <aside class="dstatic" aria-label="Details, Topics tab"><div class="dh"><h2>Details</h2></div>
-      <div class="tabs"><span>Coverage</span><span class="on">Topics</span><span>People</span><span>Rules</span><span>Me</span></div>
-      <div class="tp" id="w-topics"></div></aside></div>
-</section>
-<section class="screen" id="people" aria-labelledby="cap-people">
-  <div class="wf-cap"><h1 class="h1" id="cap-people">2. People and experts</h1><span class="label">M5 + M11 + M12 + S11 + S12 + S16 · drawer tab, Graph is a toggle</span></div>
-  <header><span class="brand">Grapevine</span><div class="hright"><span class="tag">Sample data</span><span class="btn ghost hide-sm">Details</span><span class="btn">Play demo</span></div></header>
-  <div class="stage"><div class="ghostcol" aria-hidden="true"><div class="ph-block">Ask column: Who to tag names open this tab on that person</div></div>
-    <aside class="dstatic" aria-label="Details, People tab"><div class="dh"><h2>Details</h2></div>
-      <div class="tabs"><span>Coverage</span><span>Topics</span><span class="on">People</span><span>Rules</span><span>Me</span></div>
-      <div class="tp"><div class="tp-h"><span class="label" id="w-ppl-h"></span><span class="seg" role="group" aria-label="View"><button aria-pressed="true">List</button><button aria-pressed="false">Graph</button></span></div><div id="w-people"></div></div></aside></div>
-</section>
-<section class="screen" id="announce" aria-labelledby="cap-announce">
-  <div class="wf-cap"><h1 class="h1" id="cap-announce">3. Announce mode (organiser teaser, last in the demo)</h1><span class="label">S10 + C1 · same compose box</span></div>
-  <header><span class="brand">Grapevine</span><div class="hright"><span class="tag">Sample data</span><span class="btn ghost hide-sm">Details</span><span class="btn">Play demo</span></div></header>
-  <div class="amain"><div class="titlebar"><h2 class="h1">Running an event? Paste the announcement</h2>
-      <span class="seg" role="group" aria-label="Mode"><button aria-pressed="false">Ask</button><button aria-pressed="true">Announce</button></span></div>
-    <div class="compose"><label for="ann" class="sr-only">Your announcement</label><textarea id="ann" rows="3"></textarea></div>
-    <section class="panel start" id="w-announce" aria-label="Before you post"></section></div>
-</section>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grapevine mockup screens (sample data)</title>
+<link rel="stylesheet" href="../kit/design/tokens.css"><link rel="stylesheet" href="mock.css">
+<style>.ix{max-width:1200px;margin:0 auto;padding:32px 24px}.ix h2{margin:28px 0 8px;font-family:var(--font-display);font-weight:400;font-size:var(--text-h2)}.pair{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px;align-items:start}.pair img{width:100%;border:1px solid var(--rule);border-radius:var(--radius)}</style>
+</head><body><div class="ix"><h1>Grapevine mockup screens</h1>
+<p class="src">Sample data only. Live mockup: <a href="grapevine.html">grapevine.html</a>. Layout note: <a href="layout.md">layout.md</a>. Overview: <a href="contact-sheet.png">contact-sheet.png</a>. Each screen at 1280 and 390 px.</p>
+<div id="list"></div></div>
 <script>
-const v = derive(window.MOCK, {});
-document.getElementById('w-topics').innerHTML = V.topics(v);
-document.getElementById('w-ppl-h').textContent = 'On ' + v.topic.label;
-document.getElementById('w-people').innerHTML = V.peopleList(v);
-document.getElementById('ann').value = v.announce.draft;
-document.getElementById('w-announce').innerHTML = V.announce(v);
-autosize(document.getElementById('ann'));
-</script>
-</body></html>
+const S = [['ask', 'Land: empty compose, coverage line (demo 1)', '?state=empty'], ['ask-loading', 'Ask: named loading steps (demo 2)', '?state=loading'], ['ask-not-enough-coverage', 'Not enough coverage yet', '?state=ne'],
+  ['ask-results', 'Ask results: Already known, Experts to tag, Where to post with cross-post flagged (demo 3 to 5)', ''], ['ask-results-dark', 'Ask results, dark theme', ''],
+  ['announce', 'Announce: where allowed, contact first, pick mentors (demo 8)', '?mode=announce'], ['library', 'Library, in place', '?panel=library'], ['experts', 'Experts list, in place', '?panel=experts'],
+  ['experts-graph', 'Experts graph (Cognee)', '?panel=graph'], ['my-posts', 'My posts, awaiting replies (demo 6)', '?panel=posts'], ['growth', 'Growth, before the live read', '?panel=growth'],
+  ['growth-after-read', 'Growth after reading one channel live (demo 7)', '?panel=growth&read=1'], ['end-card', 'End card with how it was built (demo 9)', '?end=1']];
+document.getElementById('list').innerHTML = S.map(([n, t, q]) => `<h2>${t}</h2><p class="src"><a href="grapevine.html${q}">Open live</a></p><div class="pair"><a href="screens/${n}-1280.png"><img src="screens/${n}-1280.png" alt="${t}, 1280 px"></a><a href="screens/${n}-390.png"><img src="screens/${n}-390.png" alt="${t}, 390 px"></a></div>`).join('');
+</script></body></html>

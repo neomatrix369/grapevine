@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grapevine, one screen (mockup, sample data)</title>
+<link rel="stylesheet" href="../kit/design/tokens.css">
+<link rel="stylesheet" href="mock.css">
+<!-- Every number comes from mock-data.js (fictional sample) through derive() in derive.js; My posts from my-posts.js. -->
+<script src="mock-data.js"></script><script src="my-posts.js"></script><script src="derive.js"></script><script src="views.js"></script>
+</head>
+<body>
+<header>
+  <span class="brand">Grapevine</span>
+  <div class="hright">
+    <span class="tag">Sample data</span>
+    <span class="muted who small" id="who"></span>
+    <button class="btn" id="play">Play demo</button>
+  </div>
+</header>
+<div class="shell">
+  <nav class="side" aria-label="Grapevine">
+    <button data-panel="" aria-current="page"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Compose</span></button>
+    <button data-panel="library"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h3v11H3zM7 2.5h3v11H7zM11 3l2.5.6-2 9.9-2.4-.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Library</span></button>
+    <button data-panel="experts"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6" cy="5.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.5 13.5c.6-2.6 2.3-4 4.5-4s3.9 1.4 4.5 4M11 3.2a2.4 2.4 0 0 1 0 4.6M12.5 9.8c1 .6 1.7 1.8 2 3.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Experts</span></button>
+    <button data-panel="posts"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>My posts</span><span class="count" id="posts-count"></span></button>
+    <button data-panel="growth"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13.5h12M3.5 11V8.5M7 11V6M10.5 11V3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Growth</span></button>
+  </nav>
+  <main id="main">
+    <div class="titlebar">
+      <h1 id="title">Ask anything about our communities</h1>
+      <span class="seg" role="group" aria-label="Mode"><button aria-pressed="true" data-mode="ask">Ask</button><button aria-pressed="false" data-mode="announce">Announce</button></span>
+    </div>
+    <div class="compose">
+      <label for="q" class="sr-only" id="q-label">Your question</label>
+      <textarea id="q" rows="2"></textarea>
+    </div>
+    <p class="confid" id="confid"></p>
+    <section class="panel results" id="results" aria-live="polite" aria-label="Results"></section>
+  </main>
+  <aside class="inplace" id="inplace" aria-labelledby="ip-h" hidden>
+    <div class="dh"><h2 id="ip-h" tabindex="-1"></h2>
+      <button class="x" id="ip-close" aria-label="Close"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
+    <div class="tp" id="ip-body"></div>
+  </aside>
+</div>
+<div class="endwrap" id="end" hidden></div>
+<script>
+// URL: ?state=empty|loading|ne  ?mode=announce  ?panel=library|experts|graph|posts|growth  ?read=1  ?end=1
+const D = window.MOCK, qs = new URLSearchParams(location.search), $ = id => document.getElementById(id);
+const ui = { mode: qs.get('mode') || 'ask', view: qs.get('state') || 'result', panel: qs.get('panel') || '', read: qs.get('read') === '1',
+  selected: ['evals', 'show-and-tell'], tagged: ['p-cleo'], mentors: ['p-cleo', 'p-kemi', 'p-ada'] };
+const TITLES = { library: 'Library', experts: 'Experts', graph: 'Experts', posts: 'My posts', growth: 'Growth' };
+function model() {
+  const topic = ui.view === 'ne' ? 't-rag-eval/llm-judge' : 't-rag-eval';
+  const v = derive(D, { read: ui.read, selected: ui.selected, topic });
+  v.experts = v.experts.filter(p => p.answers >= 2);   // under 2 answers nobody is called an expert
+  return v;
+}
+function growthModel(v) {
+  const before = derive(D, { read: false }), after = derive(D, { read: true });
+  const ex = m => m.experts.filter(p => p.answers >= 2).map(p => p.id);
+  const thr = m => m.allCoverage.reduce((s, r) => s + r.threads_read, 0), chn = m => m.allCoverage.filter(r => r.status === 'read').length;
+  const cur = ui.read ? after : before, d = (f) => ui.read ? f(after) - f(before) : 0;
+  const start = new Date(D.cutoff + 'T00:00:00Z'), weeks = [0, 1, 2, 3].map(i => ({ label: v.fmtDate(new Date(start.getTime() + i * 7 * 864e5).toISOString()), n: 0 }));
+  // each channel's threads spread evenly over the weeks it was read (oldest_read..newest_read); the held-back read lands Today
+  before.allCoverage.filter(r => r.threads_read).forEach(r => { const wk = t => Math.min(3, Math.max(0, Math.floor((new Date(t) - start) / (7 * 864e5))));
+    const a = wk(r.oldest_read), z = wk(r.newest_read); for (let i = a; i <= z; i++) weeks[i].n += r.threads_read / (z - a + 1); });
+  weeks.forEach((w, i) => { if (i) w.n += weeks[i - 1].n; }); weeks.forEach(w => w.n = Math.round(w.n));
+  if (ui.read) weeks.push({ label: 'Today', n: weeks[3].n + d(thr) });
+  const newIds = ui.read ? ex(after).filter(id => !ex(before).includes(id)) : [];
+  return { kpis: [
+      { label: 'Channels read', value: `${chn(cur)} of ${cur.allCoverage.length}`, delta: d(chn) },
+      { label: 'Threads read', value: thr(cur), delta: d(thr) },
+      { label: 'Experts on topic', value: ex(cur).length, delta: d(m => ex(m).length) },
+      { label: 'Topics', value: D.topics.length, note: 'with notes and sources' }],
+    weeks, newExperts: newIds.map(id => Object.assign(after.people.find(p => p.id === id), { why: D.fallbacks.start_with_after_read.q1.why_new })) };
+}
+function render() {
+  const v = model(), ann = ui.mode === 'announce';
+  $('who').textContent = v.me.name;
+  $('posts-count').textContent = window.MY_POSTS.filter(p => p.status === 'awaiting').length;
+  document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === ui.mode));
+  $('title').textContent = ann ? 'Announce once, to the right places' : 'Ask anything about our communities';
+  $('q-label').textContent = ann ? 'Your announcement' : 'Your question';
+  $('q').placeholder = ann ? 'Paste your event or hackathon announcement' : 'Type your question once. Grapevine shows what is known, who knows it and where to post.';
+  $('q').value = ann ? v.announce.draft : ui.view === 'empty' ? '' : ui.view === 'ne' ? 'Is LLM-as-judge reliable enough to trust?' : v.question;
+  $('q').rows = ann ? 3 : 2; autosize($('q'));
+  $('confid').innerHTML = V.coverageLine(v);
+  $('results').hidden = !ann && ui.view === 'empty';
+  $('results').innerHTML = ann ? V.announce(v, ui) : ui.view === 'loading' ? V.loading(v) : ui.view === 'ne' ? V.notEnough(v) : V.results(v, ui);
+  $('results').classList.toggle('bare', ui.view === 'ne' && !ann);
+  // in-place panel
+  const p = ui.panel, ip = $('inplace');
+  document.body.classList.toggle('has-panel', !!p);
+  document.querySelectorAll('.side [data-panel]').forEach(b => b.dataset.panel === (p === 'graph' ? 'experts' : p) ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  ip.hidden = !p;
+  if (p) {
+    $('ip-h').textContent = TITLES[p];
+    $('ip-body').innerHTML = p === 'library' ? V.library(v) : p === 'experts' || p === 'graph' ? V.experts(v) : p === 'posts' ? V.myPosts(v, window.MY_POSTS) : V.growth(v, growthModel(v));
+    if (p === 'graph') { $('ex-list').hidden = true; $('ex-graph').hidden = false; document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === 'ex-graph')); }
+  }
+  wire();
+}
+function wire() {
+  document.querySelectorAll('[data-panel]').forEach(b => b.onclick = () => { ui.panel = b.dataset.panel; render(); if (ui.panel) $('ip-h').focus(); });
+  document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { ui.mode = b.dataset.mode; render(); });
+  document.querySelectorAll('[data-read]').forEach(b => b.onclick = () => { ui.read = true; ui.view = 'result'; render(); });
+  document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => b.parentElement.querySelectorAll('[data-view]').forEach(x => { const on = x === b; x.setAttribute('aria-pressed', on); $(x.dataset.view).hidden = !on; }));
+  document.querySelectorAll('#results input[value]').forEach(cb => cb.onchange = () => { ui.selected = [...document.querySelectorAll('#results input[value]:checked')].map(x => x.value); if (!ui.selected.length) ui.selected = ['evals']; render(); });
+  document.querySelectorAll('[data-tag]').forEach(cb => cb.onchange = () => { ui.tagged = [...document.querySelectorAll('[data-tag]:checked')].map(x => x.dataset.tag); render(); });
+}
+$('ip-close').onclick = () => { ui.panel = ''; render(); document.querySelector('.side [data-panel=""]').focus(); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.panel) $('ip-close').click(); });
+if (qs.get('end') === '1') { document.querySelector('.shell').hidden = true; $('end').hidden = false; $('end').innerHTML = V.endCard(model()); }
+render();
+</script>
+</body></html>

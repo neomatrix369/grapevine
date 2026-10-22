@@ -1,10 +1,12 @@
 /* design/tokens.css: the ONLY place for colour, font, radius, spacing and motion values.
    Imported by app/globals.css (Tailwind v4 `@theme inline` maps these to utilities).
-   Calm paper-and-ink palette, accent darkened for text. Light theme only.
+   Calm paper-and-ink palette, accent darkened for text. Light by default; dark follows prefers-color-scheme (block below).
+   Demo mode and the video stay on light for the projector.
    Names are by meaning, not hue. Do not regenerate this file (no /frontend-advisor, no /ui-ux-pro-max).
    Contrast pairs below are checked by scripts/check.sh (WCAG AA 4.5:1 for text). */
 
 :root {
+  color-scheme: light dark;
   /* Surfaces */
   --bg: #efebe3;          /* bone paper */
   --card: #f7f5f0;
@@ -64,6 +66,32 @@
   --dur-ui: 200ms;      /* toggles, panels, graph focus */
   --dur-entrance: 450ms;/* results arriving, heatmap fill */
   --stagger: 50ms;
+}
+
+/* Dark: same names, same meanings. Warm charcoal paper, light ink, one accent. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #171614;
+    --card: #201e1b;
+    --muted: #2b2925;
+    --rule: #3a3732;
+    --ink: #f1ede5;
+    --ink-muted: #aaa398;
+    --signal: #f0612f;
+    --signal-ink: #ff9a70;
+    --signal-soft: #4a2b1f;
+    --control: #8fcbb6;
+    --on-control: #10201b;
+    --you: #9dbbe8;
+    --mark: #5c5121;
+    --warn: #e6e1d7;
+    --warn-soft: #2e2b27;
+    --focus: #f1ede5;
+    --cov-read: #8fcbb6;
+    --cov-partial: #4f6a60;
+    --cov-unread: #2b2925;
+    --shadow-card: 0 1px 0 rgb(0 0 0 / 0.3), 0 1px 3px rgb(0 0 0 / 0.4);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

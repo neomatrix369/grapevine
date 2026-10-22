@@ -13,7 +13,7 @@ Planning is finished: every answer in files 00–06 is decided, and `decisions.m
 - Video: 20 s promo + about 2:15 walkthrough, under 3 min, ending on the build proof.
 
 ## Starting material
-- `../../mockup/` and `../../kit/design/tokens.css`: earlier mockups (fictional sample data). They show the old drawer tabs; still to mock: the Ask/Announce switch, My posts, Growth.
+- `../../mockup/` and `../../kit/design/tokens.css`: earlier mockups (fictional sample data). Updated 19:46 to the agreed layout: `mockup/grapevine.html` (live), `mockup/layout.md`, renders in `mockup/screens/` at 1280 and 390, overview in `mockup/contact-sheet.png`.
 - The old prep in `grokbot-community-london-2026-planning/` (next to this project folder) is reference only; copy anything else fresh.
 
 ## Next
