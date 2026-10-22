@@ -10,7 +10,8 @@ Answers marked "Draft (fallback)" in files 01 to 06 are not decisions yet. Log e
 | 22 Oct 19:09 | UI feel | Calm and minimal, warmth around people | Agent-recommended, Mani agreed | Evidence and accent read best on a projector; reuses existing tokens and mockups; keeps the question-first story |
 | 22 Oct 19:10 | Theme | Light and dark, following the system; demo pinned to light | Mani | Respects user setting; light keeps projector and video consistent |
 | 22 Oct 20:29 | Theme default | Light by default; do not follow `prefers-color-scheme`. Dark tokens stay under `:root.dark` | Mani | Demo, video and projector stay on paper-and-ink; dark remains an explicit opt-in |
-| 22 Oct 20:35 | Two views | Simple tab (default) plus Workspace tab for the current full UI | Mani | Current one-screen is too involved for the first look; keep it, and add a three-answer ask path |
+| 22 Oct 20:35 | Two views | Ask once tab (default; first labelled Simple) plus Workspace tab for the current full UI | Mani | Current one-screen is too involved for the first look; keep it, and add a three-answer ask path |
+| 22 Oct 20:57 | Default tab name | **Ask once**, not Simple | Mani | Simple names difficulty; Ask once is the job |
 | 22 Oct 19:10 | Screen sizes | Desktop 1280 px first, checked at 390 px | Agent-recommended | Projector demo is desktop; phone check catches breakage |
 | 22 Oct 19:12 | Where agents run | All local in Cursor on the Mac | Mani | Keeps everything on the Mac; no GitHub needed to build |
 | 22 Oct 19:15 | Sponsor proof | Repo docs (`docs/BUILT-WITH.md`, `PROGRESS.md`, evidence screenshots) plus tagged commits with trailers | Mani | Judging asks how much Grok Bot and Cursor architected it; the repo makes it checkable |

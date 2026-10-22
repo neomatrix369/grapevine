@@ -14,9 +14,11 @@
 **Key screens and states:**
 > **Decided 19:34 (Mani):** one screen with the compose box and the Ask/Announce switch, three result rows; side menu opens Library, Experts (list and graph), My posts and Growth in place. Loading shows real named steps; "not enough coverage yet" instead of guesses.
 >
-> **Updated 20:35:** two tabs. **Simple** (default) is the 20-second ask: question, already known, who knows, where to post, copy and open. **Workspace** is the current full screen: Ask/Announce, side menu, in-place Library, Experts, My posts and Growth.
+> **Updated 20:35:** two tabs. **Ask once** (default; first labelled Simple) is the 20-second ask: question, already known, who knows, where to post, copy and open. **Workspace** is the current full screen: Ask/Announce, side menu, in-place Library, Experts, My posts and Growth.
 >
-> **Updated 20:43:** Simple keeps only the punches: question, knowledge graph (who knows), the known answer snippet, and where to post with copy. Coverage, tagging, channel pickers and the cross-post rule stay in Workspace.
+> **Updated 20:43:** Ask once keeps only the punches: question, knowledge graph (who knows), the known answer snippet, and where to post with copy. Coverage, tagging, channel pickers and the cross-post rule stay in Workspace.
+>
+> **Updated 20:57:** the default tab is named **Ask once**, not Simple.
 
 **Desktop only, or mobile too:**
 > **Decided 19:10 (agent-recommended):** designed at 1280 px, checked at 390 px. Detailed look choices (fonts, motion, reference image) are made during the build by the frontend-ui-craft skill.

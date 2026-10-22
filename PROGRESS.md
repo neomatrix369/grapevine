@@ -22,6 +22,8 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 20:42 [cursor-agent-0] browser-ui-qa Simple+Workspace: 1280 OK · 390 OK · console 0 · overflow 0 · keyboard tabs/Announce/Library/Open Workspace 6/6 · vs mockup: Simple is new, Workspace matches.
 - 20:43 [cursor-agent-0] Simple now shows only question, knowledge graph, known answer, and where to post. Graph extracted for reuse in Workspace Experts.
 - 20:47 [cursor-agent-0] browser-ui-qa Simple graph: 1280 OK · 390 OK · overflow 0 · Workspace Experts graph still opens.
+- 20:57 [cursor-agent-0] Renamed the default tab from Simple to Ask once across UI, types, CSS and docs.
+- 21:04 [cursor-agent-0] browser-ui-qa Ask once+Workspace: 1280 OK · 390 OK · overflow 0 · tabs Ask once/Workspace + Open Workspace · vs mockup: Ask once is the 20s path, Workspace matches.
 
 ## Decision log
 Newest at the bottom. Slice ids in backticks.
@@ -32,5 +34,6 @@ Newest at the bottom. Slice ids in backticks.
 | 22 Oct 2026 | `step1` | Fill the one-screen shell from typed `SAMPLE` in `web/lib/sample-data.ts`, not from `route_question` | Supabase keys are empty and the migration must not be applied yet; the demo path still has to be visible |
 | 22 Oct 2026 | `step1` | Restyle shadcn `Button` with the mockup `.btn` classes | Stack requires shadcn; visual language is the paper-and-ink mockup, not the default zinc theme |
 | 22 Oct 2026 | `step1` | Pin the default theme to light; keep dark tokens under `:root.dark` | Demo and projector stay paper-and-ink; OS dark mode should not restyle the app |
-| 22 Oct 2026 | `simple-tab` | Name the full UI **Workspace**; land on **Simple** | Simple is the 20-second judge moment; Workspace keeps the locked 9-step demo path |
-| 22 Oct 2026 | `simple-tab` | Simple shows graph + known snippet + one channel, nothing else | Graph is the distinctive punch; the snippet is the answer; posting rules belong in Workspace |
+| 22 Oct 2026 | `simple-tab` | Name the full UI **Workspace**; land on **Ask once** (first labelled Simple) | Ask once is the 20-second judge moment; Workspace keeps the locked 9-step demo path |
+| 22 Oct 2026 | `simple-tab` | Ask once shows graph + known snippet + one channel, nothing else | Graph is the distinctive punch; the snippet is the answer; posting rules belong in Workspace |
+| 22 Oct 2026 | `ask-once-name` | Default tab label is **Ask once** | Simple named difficulty; Ask once is the job |

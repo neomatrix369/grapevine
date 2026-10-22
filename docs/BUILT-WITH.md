@@ -23,7 +23,7 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 | Next.js (App Router) + TypeScript + Tailwind + shadcn/ui app | `web/` |
 | Tagged commits from the local agent | `[cursor]` subjects and `Built-with: Cursor` trailers |
 | Design tokens (light default; dark opt-in via `.dark`) | `kit/design/tokens.css`, ported into the `web/` theme |
-| One-screen shell (compose box, result rows, side menu, coverage line) | `web/` (Step 1) |
+| Ask once (graph, known answer, where to post) and Workspace (Ask/Announce, side menu) | `web/` |
 
 ## Supabase: the store and search
 Postgres with keyword plus meaning search (pgvector) combined in one `route_question()` hybrid RRF function, and live updates that drive the coverage view.
