@@ -2,7 +2,7 @@
 
 Ask once. See what's known, who knows it, and where to post.
 
-Built for the [Grok Bot Community Engineering London Hackathon](https://luma.com/eveur09a) (22 Oct 2026). Source: [neomatrix369/grapevine](https://github.com/neomatrix369/grapevine). Who built it, and where: [docs/BUILT-WITH.md](docs/BUILT-WITH.md). Log: [PROGRESS.md](PROGRESS.md). Licence: [MIT](LICENSE).
+Built for the [Grok Bot Community Engineering London Hackathon](https://luma.com/eveur09a) (22 Oct 2026). Source: [neomatrix369/grapevine](https://github.com/neomatrix369/grapevine). Who built it, and where: [docs/BUILT-WITH.md](docs/BUILT-WITH.md). Log: [PROGRESS.md](PROGRESS.md).
 
 ## What it does
 Two tabs on localhost: **Ask once** (default: question, graph, known snippet, where to post) and **Workspace** (Ask/Announce, side menu for Library, Experts, My posts, Growth). The UI is filled from typed sample data in [`web/lib/sample-data.ts`](web/lib/sample-data.ts). Live data is the decided target (22 Oct 21:45): Grok Bot loads Slack + Discord into [Supabase](https://supabase.com) and [Cognee](https://www.cognee.ai) Cloud; Cursor wires the app per [`docs/planning/07-live-data-build.md`](docs/planning/07-live-data-build.md). Sample data remains a labelled fallback.
@@ -58,3 +58,6 @@ The interview is finished. Files 00–07 are the decided plan, not a live status
 7. [`docs/planning/06-build-and-delivery.md`](docs/planning/06-build-and-delivery.md): how and where it gets built and shown
 8. [`docs/planning/07-live-data-build.md`](docs/planning/07-live-data-build.md): Cursor brief to wire the app to live Supabase and Cognee Cloud
 9. [`docs/planning/decisions.md`](docs/planning/decisions.md): every decision, with who made it and when
+
+## Licence
+[MIT](LICENSE) © 2026 Mani Sarkar. Full text: [`LICENSE`](LICENSE).

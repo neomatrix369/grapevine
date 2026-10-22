@@ -29,6 +29,7 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 21:48 [grok-bot] Recorded Mani's 21:33–21:45 decisions: live Slack/Discord data into Supabase, Cognee Cloud (not local), sample only as labelled fallback. Added docs/planning/07-live-data-build.md for Cursor and Cognee/LLM key names to .env.example.
 - 21:54 [cursor-agent-0] README links: Luma event, GitHub repo, sponsors (Grok Bot, Cursor, Supabase, Cognee, Zero), stack, and in-repo docs/mockup paths.
 - 22:01 [cursor-agent-0] README Env section from `.env.example`: Supabase, Cognee Cloud, and LLM keys.
+- 22:07 [cursor-agent-0] README Licence section: MIT, copyright 2026 Mani Sarkar, link to LICENSE.
 
 ## Decision log
 Newest at the bottom. Slice ids in backticks.
@@ -44,3 +45,4 @@ Newest at the bottom. Slice ids in backticks.
 | 22 Oct 2026 | `ask-once-name` | Default tab label is **Ask once** | Simple named difficulty; Ask once is the job |
 | 22 Oct 2026 | `docs-sync` | Current-truth docs name sample data, unapplied migration, and Cognee caption; planning files stay decided snapshots | Judging proof must not claim ingest, live search, or a Cognee job that are not in the repo |
 - 21:45 BST [grok-bot] Live community read: read-only CDP reader (Slack 9222 / Discord 9223, loopback), Supabase loader (channels, people, messages + gte-small 384-d embeddings, coverage, graph) and Cognee Cloud ingest in reader/live/. Raw text stays out of git.
+- 22:06 [cursor-agent-0] Started the Next.js demo on port 3001 (3000 is another app). Open http://localhost:3001 (LAN: http://172.20.10.4:3001).
