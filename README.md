@@ -60,4 +60,4 @@ The interview is finished. Files 00–07 are the decided plan, not a live status
 9. [`docs/planning/decisions.md`](docs/planning/decisions.md): every decision, with who made it and when
 
 ## Licence
-[MIT](LICENSE) © 2026 Mani Sarkar. Full text: [`LICENSE`](LICENSE).
+[MIT](LICENSE) © 2026 Mani Sarkar and Arkjyoti Saha. Full text: [`LICENSE`](LICENSE).

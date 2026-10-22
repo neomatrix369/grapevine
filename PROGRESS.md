@@ -30,6 +30,7 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 21:54 [cursor-agent-0] README links: Luma event, GitHub repo, sponsors (Grok Bot, Cursor, Supabase, Cognee, Zero), stack, and in-repo docs/mockup paths.
 - 22:01 [cursor-agent-0] README Env section from `.env.example`: Supabase, Cognee Cloud, and LLM keys.
 - 22:07 [cursor-agent-0] README Licence section: MIT, copyright 2026 Mani Sarkar, link to LICENSE.
+- 22:09 [cursor-agent-0] README and LICENSE name both copyright holders: Mani Sarkar and Arkjyoti Saha.
 
 ## Decision log
 Newest at the bottom. Slice ids in backticks.
