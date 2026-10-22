@@ -6,7 +6,7 @@ import { AnnounceResults } from "@/components/announce-results";
 import { AskResults } from "@/components/ask-results";
 import { CloseIcon, ComposeIcon, ExpertsIcon, GrowthIcon, LibraryIcon, PostsIcon } from "@/components/icons";
 import { InPlaceBody } from "@/components/inplace-panels";
-import { SAMPLE, awaitingCount, type Mode, type Panel } from "@/lib/sample-data";
+import { awaitingCount, type Mode, type Panel, type SampleView } from "@/lib/sample-data";
 
 const NAV: { id: Panel; label: string; icon: typeof ComposeIcon }[] = [
   { id: "compose", label: "Compose", icon: ComposeIcon },
@@ -16,13 +16,16 @@ const NAV: { id: Panel; label: string; icon: typeof ComposeIcon }[] = [
   { id: "growth", label: "Growth", icon: GrowthIcon },
 ];
 
-export function WorkspaceApp() {
-  const view = SAMPLE;
+type WorkspaceAppProps = {
+  view: SampleView;
+};
+
+export function WorkspaceApp({ view }: WorkspaceAppProps) {
   const [mode, setMode] = useState<Mode>("ask");
   const [panel, setPanel] = useState<Panel>("compose");
   const [draft, setDraft] = useState(view.question);
   const [selected, setSelected] = useState<string[]>(view.defaultSelected);
-  const [tagged, setTagged] = useState<string[]>(["p-cleo"]);
+  const [tagged, setTagged] = useState<string[]>(view.whoToTag.map((person) => person.id));
   const awaiting = useMemo(() => awaitingCount(view.myPosts), [view.myPosts]);
   const hasPanel = panel !== "compose";
 

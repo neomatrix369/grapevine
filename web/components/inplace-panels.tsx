@@ -127,7 +127,11 @@ function ExpertsPanel({ view }: { view: SampleView }) {
         <KnowledgeGraph
           view={view}
           listHint
-          caption="Knowledge graph by Cognee. Circle size and number are answers on this topic; line thickness is shared threads. Blue lines are your own links, only you see them."
+          caption={
+            view.source === "live"
+              ? "Knowledge graph by Cognee Cloud"
+              : "Knowledge graph by Cognee. Circle size and number are answers on this topic; line thickness is shared threads. Blue lines are your own links, only you see them."
+          }
         />
       ) : (
         <>
@@ -224,7 +228,7 @@ function PostsPanel({ view }: { view: SampleView }) {
 }
 
 function GrowthPanel({ view }: { view: SampleView }) {
-  const max = Math.max(...view.growth.weeks.map((week) => week.n));
+  const max = view.growth.weeks.reduce((highest, week) => Math.max(highest, week.n), 1);
   return (
     <>
       <div className="kpis">
