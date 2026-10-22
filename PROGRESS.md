@@ -14,3 +14,5 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 20:02 [grok-bot] Added the branch-and-PR rule for all agents (AGENTS.md, .cursor/rules/git-workflow.mdc).
 - 20:05 [cursor-agent-0] Started Step 1 on feat/step1-scaffold: Next.js scaffold in web/, tokens from kit/design/tokens.css, one-screen shell. App is landing on this branch.
 - 20:22 [cursor-agent-0] supabase/migrations/0001_init.sql (schema + route_question hybrid RRF) landing on this branch. Not applied; Supabase keys still empty.
+- 20:15 [cursor-agent-0] Scaffolded Next.js (App Router, TypeScript, Tailwind v4, shadcn Button) in web/ with pnpm.
+- 20:25 [cursor-agent-0] Ported kit/design/tokens.css into the app theme (light/dark via prefers-color-scheme) and built the one-screen shell from mockup/grapevine.html using typed sample data. `pnpm typecheck` and `pnpm build` pass. Migration not applied.
