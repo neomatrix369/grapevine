@@ -12,3 +12,17 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 19:53 [grok-bot] Created the private GitHub repo and pushed main.
 - 19:58 [grok-bot] Wrote docs/BUILT-WITH.md and this log.
 - 20:02 [grok-bot] Added the branch-and-PR rule for all agents (AGENTS.md, .cursor/rules/git-workflow.mdc).
+- 20:05 [cursor-agent-0] Started Step 1 on feat/step1-scaffold: Next.js scaffold in web/, tokens from kit/design/tokens.css, one-screen shell. App is landing on this branch.
+- 20:22 [cursor-agent-0] supabase/migrations/0001_init.sql (schema + route_question hybrid RRF) landing on this branch. Not applied; Supabase keys still empty.
+- 20:15 [cursor-agent-0] Scaffolded Next.js (App Router, TypeScript, Tailwind v4, shadcn Button) in web/ with pnpm.
+- 20:25 [cursor-agent-0] Ported kit/design/tokens.css into the app theme (light/dark via prefers-color-scheme) and built the one-screen shell from mockup/grapevine.html using typed sample data. `pnpm typecheck` and `pnpm build` pass. Migration not applied.
+- 20:30 [cursor-agent-0] Step 1 on feat/step1-scaffold verified (typecheck, lint, build, browser Ask/Announce/panels) and Gate 4 approved. PR next.
+
+## Decision log
+Newest at the bottom. Slice ids in backticks.
+
+| Date | Slice | Decision | Why |
+|---|---|---|---|
+| 22 Oct 2026 | `step1` | Copy `kit/design/tokens.css` into `web/app/tokens.css` instead of importing the kit file from outside the Next app | Turbopack CSS is rooted at `web/`; a copy plus a SSOT comment keeps the app buildable without a monorepo CSS alias |
+| 22 Oct 2026 | `step1` | Fill the one-screen shell from typed `SAMPLE` in `web/lib/sample-data.ts`, not from `route_question` | Supabase keys are empty and the migration must not be applied yet; the demo path still has to be visible |
+| 22 Oct 2026 | `step1` | Restyle shadcn `Button` with the mockup `.btn` classes | Stack requires shadcn; visual language is the paper-and-ink mockup, not the default zinc theme |

@@ -1,5 +1,13 @@
 # Hackathon: ideation and planning
 
+Who built it, and where: [docs/BUILT-WITH.md](docs/BUILT-WITH.md).
+
+## Run it
+```bash
+cd web && pnpm install && pnpm dev
+```
+Localhost only. Copy `.env.example` to `.env.local` (never commit it). The Step 1 UI uses typed sample data; do not apply `supabase/migrations/0001_init.sql` until keys are filled.
+
 Work through the files in order. Each question has a **Draft (fallback)** answer taken from the earlier plan. Keep it, change it or replace it. A fallback only stands if we don't choose something better.
 
 - `docs/planning/00-event.md`: the event, the schedule and the judging criteria
