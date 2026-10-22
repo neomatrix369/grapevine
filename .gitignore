@@ -6,3 +6,4 @@ node_modules/
 .DS_Store
 .cursor-runs/
 .omc/
+demo-video/

@@ -24,10 +24,11 @@ a:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible,
 .more[aria-expanded="true"] svg{transform:rotate(180deg)}
 .seg{display:inline-flex;border:1px solid var(--rule);border-radius:var(--radius-sm);overflow:hidden}
 .seg button{position:relative;font-family:var(--font-mono);font-size:var(--text-label);letter-spacing:var(--tracking-label);text-transform:uppercase;padding:3px 8px;color:var(--ink-muted)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--ink);color:var(--card)}
 
 header{height:56px;display:flex;align-items:center;gap:var(--space-4);padding:0 var(--space-6);border-bottom:1px solid var(--rule)}
 .brand{font-family:var(--font-display);font-size:var(--text-number-lg);letter-spacing:var(--tracking-display)}
+.app-tabs{flex:none}
 .hright{margin-left:auto;display:flex;align-items:center;gap:var(--space-4)}
 
 .titlebar{display:flex;align-items:end;justify-content:space-between;gap:var(--space-4)}
@@ -94,6 +95,17 @@ td.num,th.num{white-space:nowrap}
 .graph text{font-family:var(--font-body);font-size:var(--text-label);fill:var(--ink)}
 .graph text.mono{font-family:var(--font-mono)}
 .badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+
+/* Simple: question, graph, known answer, where to post. */
+.simple{width:100%;max-width:720px;margin:0 auto;padding:48px var(--space-6) 64px}
+.simple-graph{margin-top:28px}
+.simple-graph .ph .src{margin-left:auto}
+.simple-graph .caption{padding:0 18px 14px;margin-top:0}
+.simple-facts{margin-top:4px}
+.simple-facts section{padding:16px 2px;border-top:1px solid var(--rule)}
+.simple-facts section:first-child{border-top:0}
+.simple-facts .label{display:block;margin-bottom:6px}
+.simple-more{margin-top:16px}
 
 /* one screen: side menu | compose column | in-place panel */
 .shell{display:grid;grid-template-columns:176px minmax(0,1fr);min-height:calc(100vh - 56px)}
@@ -178,9 +190,10 @@ label.person{cursor:pointer}
   .has-panel #results{display:none}
   .titlebar{flex-direction:column;align-items:start}
   .rrow,.built .rrow{grid-template-columns:1fr;gap:6px;padding:12px 14px}
-  .hright .who{display:none}
+  .hright .who,.hright .tag{display:none}
   .hright{gap:var(--space-2)}
-  header{padding:0 16px}
+  header{padding:0 16px;flex-wrap:wrap;height:auto;min-height:56px}
+  .simple{padding:24px 16px 32px}
   .kpis{grid-template-columns:1fr 1fr}
   .brand.big{font-size:calc(var(--text-display) * 1.6)}
 }

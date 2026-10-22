@@ -17,6 +17,11 @@ Newest at the bottom. Tags: `[grok-bot]`, `[cursor-agent-0]`, `[mani]`. Times ar
 - 20:15 [cursor-agent-0] Scaffolded Next.js (App Router, TypeScript, Tailwind v4, shadcn Button) in web/ with pnpm.
 - 20:25 [cursor-agent-0] Ported kit/design/tokens.css into the app theme (light/dark via prefers-color-scheme) and built the one-screen shell from mockup/grapevine.html using typed sample data. `pnpm typecheck` and `pnpm build` pass. Migration not applied.
 - 20:30 [cursor-agent-0] Step 1 on feat/step1-scaffold verified (typecheck, lint, build, browser Ask/Announce/panels) and Gate 4 approved. PR next.
+- 20:29 [cursor-agent-0] Pinned the default theme to light. Dark tokens remain under `:root.dark` and no longer follow `prefers-color-scheme`.
+- 20:35 [cursor-agent-0] Split the UI into Simple (default: ask once, three answers) and Workspace (the current Ask/Announce + side menu).
+- 20:42 [cursor-agent-0] browser-ui-qa Simple+Workspace: 1280 OK · 390 OK · console 0 · overflow 0 · keyboard tabs/Announce/Library/Open Workspace 6/6 · vs mockup: Simple is new, Workspace matches.
+- 20:43 [cursor-agent-0] Simple now shows only question, knowledge graph, known answer, and where to post. Graph extracted for reuse in Workspace Experts.
+- 20:47 [cursor-agent-0] browser-ui-qa Simple graph: 1280 OK · 390 OK · overflow 0 · Workspace Experts graph still opens.
 
 ## Decision log
 Newest at the bottom. Slice ids in backticks.
@@ -26,3 +31,6 @@ Newest at the bottom. Slice ids in backticks.
 | 22 Oct 2026 | `step1` | Copy `kit/design/tokens.css` into `web/app/tokens.css` instead of importing the kit file from outside the Next app | Turbopack CSS is rooted at `web/`; a copy plus a SSOT comment keeps the app buildable without a monorepo CSS alias |
 | 22 Oct 2026 | `step1` | Fill the one-screen shell from typed `SAMPLE` in `web/lib/sample-data.ts`, not from `route_question` | Supabase keys are empty and the migration must not be applied yet; the demo path still has to be visible |
 | 22 Oct 2026 | `step1` | Restyle shadcn `Button` with the mockup `.btn` classes | Stack requires shadcn; visual language is the paper-and-ink mockup, not the default zinc theme |
+| 22 Oct 2026 | `step1` | Pin the default theme to light; keep dark tokens under `:root.dark` | Demo and projector stay paper-and-ink; OS dark mode should not restyle the app |
+| 22 Oct 2026 | `simple-tab` | Name the full UI **Workspace**; land on **Simple** | Simple is the 20-second judge moment; Workspace keeps the locked 9-step demo path |
+| 22 Oct 2026 | `simple-tab` | Simple shows graph + known snippet + one channel, nothing else | Graph is the distinctive punch; the snippet is the answer; posting rules belong in Workspace |

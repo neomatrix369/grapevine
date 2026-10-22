@@ -1,5 +1,5 @@
 # Grapevine layout note (mockup, sample data)
-Mockup: `mockup/grapevine.html` (open in a browser; URL params below). Renders: `mockup/screens/*-1280.png` and `*-390.png`, index in `screens.html`, overview in `contact-sheet.png`. Tokens only from `kit/design/tokens.css` (light default, dark via `prefers-color-scheme`; demo and video stay light).
+Mockup: `mockup/grapevine.html` (open in a browser; URL params below). Renders: `mockup/screens/*-1280.png` and `*-390.png`, index in `screens.html`, overview in `contact-sheet.png`. Tokens only from `kit/design/tokens.css` (light default; dark opt-in via `.dark`; demo and video stay light).
 
 **Rule:** one screen. The compose box is the focal point; everything else opens in place next to it, so the question never leaves the screen.
 

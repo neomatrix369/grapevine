@@ -6,7 +6,7 @@ Planning is finished: every answer in files 00–06 is decided, and `decisions.m
 
 ## Key decisions at a glance
 - Grapevine: library, experts, write once to the right channels (optional expert tags, copy and open, nothing auto-posted), My posts, Growth, plus organiser mode (Announce, find mentors).
-- Calm, minimal UI; light and dark follow the system; designed at 1280, checked at 390; demo and video pinned to light.
+- Calm, minimal UI; light by default (dark is opt-in, not system-followed); designed at 1280, checked at 390; demo and video pinned to light.
 - Build: all local in Cursor on the Mac. Next.js/TS/Tailwind/shadcn + Supabase; Cognee builds the graph locally. Demo runs on localhost only.
 - Data: Slack and Discord desktop apps, read-only, public channels, rules first, two weeks back, one channel held back for a live read.
 - Proof: `docs/BUILT-WITH.md`, `PROGRESS.md`, `docs/evidence/`, and commits prefixed `[grok-bot]`/`[cursor]`/`[mani]` with `Built-with:` / `Context-by:` trailers.
