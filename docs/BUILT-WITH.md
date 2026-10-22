@@ -62,12 +62,12 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 | Initial schema: channels, people, messages (generated `fts` tsvector + GIN, `embedding vector(384)`), rules, coverage, graph_nodes, graph_edges, my_posts | `supabase/migrations/0001_init.sql` |
 | Hybrid keyword + meaning search (SQL only) | `route_question(query_text, query_embedding)` in that migration |
 
-The Step 1 migration is **not applied**: Supabase keys in `.env.local` are still empty (see `.env.example`). The UI does not call the database; `web/lib/env.ts` can read keys but nothing uses them yet. Env is read only via `process.env`. Do not commit `.env.local`.
+The Step 1 migration is **not applied**. `.env.example` lists the Supabase, Cognee Cloud, and `LLM_API_KEY` names; copy it to `.env.local` and never commit that file. `reader/live` reads the server keys. The UI does not call the database yet; `web/lib/env.ts` can read the public Supabase pair. Env is read only via `process.env`.
 
 ## Cognee Cloud: the knowledge graph
 **Decided 21:43 (Mani):** Cognee **Cloud** (hosted), replacing the earlier local Cognee 1.6.5 plan. The ingest on `feat/community-read` adds the live messages to the Cognee Cloud dataset `grapevine` (`POST /api/v1/add`, then `POST /api/v1/cognify`). The app reads the graph and graph search server-side (`POST /api/v1/search`, dataset graph endpoint) with `X-Api-Key` from `COGNEE_API_KEY`. Build brief: `docs/planning/07-live-data-build.md`.
 
-**In the app now:** a static SVG in `web/components/knowledge-graph.tsx`, labelled "Graph by Cognee." It switches to Cognee Cloud data when Cursor lands the brief.
+**In the app now:** a static SVG in `web/components/knowledge-graph.tsx`, labelled "Graph by Cognee." It switches to Cognee Cloud data when Cursor lands the brief. Cognee Cloud key names are in `.env.example`.
 
 ## Zero (stretch)
 Only used if the CRM stretch goal is built.
