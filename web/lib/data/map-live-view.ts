@@ -1,3 +1,18 @@
+import { sanitizeGraph } from "@/lib/data/graph-filter";
+import {
+  LIVE_SUGGESTIONS,
+  authorLabel,
+  channelDisplayName,
+  coverageCount,
+  coverageUnit,
+  initialsOf,
+  isBotOrSystem,
+  personDisplayName,
+  platformLabel,
+  shortDate,
+  titleOf,
+  workspaceLabel,
+} from "@/lib/data/display";
 import type { GraphEdge, GraphNode } from "@/lib/data/types";
 import type {
   ChannelRow,
@@ -14,6 +29,7 @@ export type LiveChannel = {
   workspace: string;
   channel_id: string;
   channel_name: string;
+  url: string | null;
 };
 
 export type LivePerson = {
@@ -32,6 +48,7 @@ export type LiveMessage = {
   channel_id: string;
   author_person_id: string | null;
   platform: string;
+  thread_id?: string | null;
 };
 
 export type LiveRule = {
@@ -75,49 +92,6 @@ export type LiveTables = {
   posts: LivePost[];
 };
 
-function displayChannelName(name: string): string {
-  const cleaned = name.replace(/^unread,\s*/i, "").replace(/\s*\([^)]*\)\s*$/g, "").trim();
-  return cleaned || name;
-}
-
-function shortDate(iso: string | null | undefined): string {
-  if (!iso) {
-    return "unknown";
-  }
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) {
-    return "unknown";
-  }
-  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-}
-
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) {
-    return "?";
-  }
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
-}
-
-function snippetOf(body: string | null): string {
-  const text = (body ?? "").replace(/\s+/g, " ").trim();
-  if (!text) {
-    return "No message text.";
-  }
-  return text.length > 180 ? `${text.slice(0, 177)}…` : text;
-}
-
-function titleOf(body: string | null): string {
-  const text = (body ?? "").replace(/\s+/g, " ").trim();
-  if (!text) {
-    return "Untitled message";
-  }
-  return text.length > 80 ? `${text.slice(0, 77)}…` : text;
-}
-
 function isCoverageStatus(value: string): value is CoverageStatus {
   return value === "read" || value === "partial" || value === "unread";
 }
@@ -126,22 +100,24 @@ function isPostStatus(value: string): value is PostStatus {
   return value === "awaiting" || value === "answered" || value === "replied" || value === "no-reply";
 }
 
-function channelLookup(channels: LiveChannel[]): Map<string, LiveChannel> {
-  return new Map(channels.map((row) => [row.channel_id, row]));
+function coverageStatus(value: string): CoverageStatus {
+  return isCoverageStatus(value) ? value : "unread";
 }
 
-function personLookup(people: LivePerson[]): Map<string, LivePerson> {
-  return new Map(people.map((row) => [row.person_id, row]));
+function namedChannel(row: LiveChannel): { name: string; workspace: string } {
+  return {
+    name: channelDisplayName(row.channel_name, row.channel_id),
+    workspace: workspaceLabel(row.workspace, row.platform),
+  };
 }
 
-function toPerson(row: LivePerson, channelsByAuthor: Map<string, string[]>): Person {
-  const chans = channelsByAuthor.get(row.person_id) ?? [];
-  const listed = chans.slice(0, 3).map((name) => `#${name}`).join(", ");
+function toPerson(row: LivePerson, name: string, channels: string[]): Person {
   const answers = row.messages_4w;
+  const listed = channels.slice(0, 3).map((item) => `#${item}`).join(", ");
   return {
     id: row.person_id,
-    name: row.display_name,
-    initials: initialsOf(row.display_name),
+    name,
+    initials: initialsOf(name),
     answers,
     answersLine: listed ? `${answers} messages in ${listed}` : `${answers} messages`,
     lastActive: shortDate(row.last_active_at),
@@ -151,75 +127,89 @@ function toPerson(row: LivePerson, channelsByAuthor: Map<string, string[]>): Per
   };
 }
 
-function coverageStatus(value: string): CoverageStatus {
-  return isCoverageStatus(value) ? value : "unread";
+function expertsFrom(tables: LiveTables, channels: Map<string, LiveChannel>): Person[] {
+  const byAuthor = new Map<string, string[]>();
+  for (const message of tables.messages) {
+    if (!message.author_person_id) {
+      continue;
+    }
+    const channel = channels.get(message.channel_id);
+    const name = channel
+      ? channelDisplayName(channel.channel_name, channel.channel_id)
+      : channelDisplayName(message.channel_id, message.channel_id);
+    const current = byAuthor.get(message.author_person_id) ?? [];
+    if (!current.includes(name)) {
+      current.push(name);
+    }
+    byAuthor.set(message.author_person_id, current);
+  }
+  return tables.people
+    .filter((person) => !person.hidden && !isBotOrSystem(person))
+    .map((row) => {
+      const name = personDisplayName(row);
+      return name ? toPerson(row, name, byAuthor.get(row.person_id) ?? []) : null;
+    })
+    .filter((person): person is Person => person !== null)
+    .sort((a, b) => b.answers - a.answers)
+    .slice(0, 8);
+}
+
+function emptyKnown(): SampleView["known"] {
+  return { title: "", snippet: "", authorName: "", channel: "", date: "", replies: 0, url: null };
 }
 
 export function mapLiveView(
   tables: LiveTables,
   graph: { nodes: GraphNode[]; edges: GraphEdge[] },
 ): SampleView {
-  const visiblePeople = tables.people.filter((person) => !person.hidden);
-  const channels = channelLookup(tables.channels);
-  const peopleById = personLookup(visiblePeople);
-  const channelsByAuthor = new Map<string, string[]>();
-  for (const message of tables.messages) {
-    if (!message.author_person_id) {
-      continue;
-    }
-    const channel = channels.get(message.channel_id);
-    const name = displayChannelName(channel?.channel_name ?? message.channel_id);
-    const current = channelsByAuthor.get(message.author_person_id) ?? [];
-    if (!current.includes(name)) {
-      current.push(name);
-    }
-    channelsByAuthor.set(message.author_person_id, current);
-  }
-
-  const experts = visiblePeople
-    .slice()
-    .sort((a, b) => b.messages_4w - a.messages_4w)
-    .slice(0, 8)
-    .map((row) => toPerson(row, channelsByAuthor));
-
+  const channels = new Map(tables.channels.map((row) => [row.channel_id, row]));
+  const peopleById = new Map(tables.people.map((row) => [row.person_id, row]));
+  const unit = coverageUnit(tables.coverage);
+  const experts = expertsFrom(tables, channels);
+  const sourceLabel = platformLabel(tables.channels.map((row) => row.platform));
   const coverageRows: CoverageRow[] = tables.coverage.map((row) => {
     const channel = channels.get(row.channel_id);
     return {
-      channel_name: displayChannelName(channel?.channel_name ?? row.channel_id),
-      workspace: channel?.workspace ?? row.platform,
-      threads_read: row.threads_read || row.messages_read,
+      channel_name: channel
+        ? channelDisplayName(channel.channel_name, channel.channel_id)
+        : channelDisplayName(row.channel_id, row.channel_id),
+      workspace: channel ? workspaceLabel(channel.workspace, channel.platform) : workspaceLabel(row.platform, row.platform),
+      threads_read: coverageCount(row, unit),
       status: coverageStatus(row.status),
     };
   });
-
-  const postCandidates: ChannelRow[] = tables.channels.slice(0, 6).map((row) => {
+  const postCandidates: ChannelRow[] = tables.channels.map((row) => {
     const cover = tables.coverage.find((item) => item.channel_id === row.channel_id);
+    const named = namedChannel(row);
     return {
-      name: displayChannelName(row.channel_name),
-      workspace: row.workspace,
-      threads: cover ? cover.threads_read || cover.messages_read : null,
+      name: named.name,
+      workspace: named.workspace,
+      threads: cover ? coverageCount(cover, unit) : null,
       status: coverageStatus(cover?.status ?? "unread"),
+      url: row.url,
+      channelId: row.channel_id,
     };
   });
-
-  const newest = tables.messages[0];
-  const newestChannel = newest ? channels.get(newest.channel_id) : undefined;
-  const newestAuthor = newest?.author_person_id ? peopleById.get(newest.author_person_id) : undefined;
-  const busiest = tables.coverage.slice().sort((a, b) => b.messages_read - a.messages_read)[0];
+  const busiest = tables.coverage.slice().sort((a, b) => coverageCount(b, unit) - coverageCount(a, unit))[0];
   const bestChannel = busiest ? channels.get(busiest.channel_id) : tables.channels[0];
+  const topicChannel = bestChannel ? namedChannel(bestChannel).name : "community";
+  const topicCount = tables.coverage.reduce((sum, row) => sum + coverageCount(row, unit), 0) || tables.messages.length;
   const readCount = tables.coverage.filter((row) => row.status === "read" || row.status === "partial").length;
   const unread = coverageRows.find((row) => row.status === "unread");
-  const cutoffIso = tables.coverage.find((row) => row.cutoff)?.cutoff ?? newest?.ts ?? null;
-  const topicChannel = displayChannelName(bestChannel?.channel_name ?? "community");
+  const cutoffIso = tables.coverage.find((row) => row.cutoff)?.cutoff ?? tables.messages[0]?.ts ?? null;
+  const cleanedGraph = sanitizeGraph(graph.nodes, graph.edges);
   const libraryThreads = tables.messages.slice(0, 8).map((message) => {
     const channel = channels.get(message.channel_id);
     const author = message.author_person_id ? peopleById.get(message.author_person_id) : undefined;
     return {
       title: titleOf(message.body),
-      authorName: author?.display_name ?? "unknown",
-      channel: displayChannelName(channel?.channel_name ?? message.channel_id),
+      authorName: authorLabel(author),
+      channel: channel
+        ? channelDisplayName(channel.channel_name, channel.channel_id)
+        : channelDisplayName(message.channel_id, message.channel_id),
       date: shortDate(message.ts),
       replies: 0,
+      url: message.url,
     };
   });
   const rule = tables.rules[0];
@@ -227,7 +217,7 @@ export function mapLiveView(
     kind: post.kind === "announce" ? "announce" : "question",
     text: post.text,
     channel: post.channel ?? topicChannel,
-    workspace: post.workspace ?? "live",
+    workspace: post.workspace ? workspaceLabel(post.workspace, "discord") : sourceLabel,
     at: shortDate(post.at),
     source: post.source === "read" ? "read" : "grapevine",
     tagged: post.tagged ?? [],
@@ -236,62 +226,48 @@ export function mapLiveView(
     answeredBy: post.answered_by ?? undefined,
     reactions: post.reactions ?? undefined,
   }));
-  const weeks = coverageRows.slice(0, 4).map((row) => ({
-    label: `#${row.channel_name}`,
-    n: row.threads_read,
-  }));
-  const graphNodes = graph.nodes.slice(0, 12);
-  const graphIds = new Set(graphNodes.map((node) => node.id));
-  const graphEdges = graph.edges
-    .filter((edge) => graphIds.has(edge.src) && graphIds.has(edge.dst))
-    .slice(0, 24);
+  const weeks = coverageRows.slice(0, 4).map((row) => ({ label: `#${row.channel_name}`, n: row.threads_read }));
 
   return {
     source: "live",
     me: { name: "Live" },
-    question: newest ? titleOf(newest.body) : "What is this community talking about?",
-    announceDraft: newest ? snippetOf(newest.body) : "No live announcement loaded.",
+    question: "",
+    suggestedQuestions: LIVE_SUGGESTIONS,
+    announceDraft: "",
     cutoff: shortDate(cutoffIso),
     channelsRead: readCount,
     channelsTotal: Math.max(tables.channels.length, tables.coverage.length),
-    known: {
-      title: newest ? titleOf(newest.body) : "No live messages yet",
-      snippet: newest ? snippetOf(newest.body) : "No live messages in Supabase yet. Keep Sample selected, or load the reader.",
-      authorName: newestAuthor?.display_name ?? "unknown",
-      channel: displayChannelName(newestChannel?.channel_name ?? topicChannel),
-      date: shortDate(newest?.ts),
-      replies: 0,
-    },
+    sourceLabel,
+    known: emptyKnown(),
     topicLabel: topicChannel,
-    topicSummary: newest
-      ? snippetOf(newest.body)
-      : "Live rows from Supabase will appear here once the community reader has loaded them.",
-    topicThreads: tables.coverage.reduce((sum, row) => sum + row.threads_read, 0),
-    topicMessages: tables.messages.length,
+    topicSummary: `${tables.messages.length} public messages in ${tables.channels.length} channels, labelled ${sourceLabel}.`,
+    topicThreads: topicCount,
+    topicMessages: tables.coverage.reduce((sum, row) => sum + row.messages_read, 0) || tables.messages.length,
+    topicUnit: unit,
     topicChannels: tables.channels.length,
-    topicUpTo: shortDate(newest?.ts ?? cutoffIso),
+    topicUpTo: shortDate(tables.messages[0]?.ts ?? cutoffIso),
     experts,
     whoToTag: experts.slice(0, 2),
     best: {
       name: topicChannel,
-      threads: busiest?.threads_read || busiest?.messages_read || tables.messages.length,
-      norm: "Live channel with the most recent public messages.",
+      threads: busiest ? coverageCount(busiest, unit) : topicCount,
+      norm: "Public channel with the most recent messages.",
     },
     postCandidates: postCandidates.length
       ? postCandidates
-      : [{ name: topicChannel, workspace: "live", threads: 0, status: "unread" }],
+      : [{ name: topicChannel, workspace: sourceLabel, threads: 0, status: "unread" }],
     defaultSelected: [topicChannel],
     crossPostRule: {
       id: rule?.rule_id ?? "live-rule",
       text: rule?.text ?? "Public channels only. Nothing is posted for you.",
-      workspace: rule?.workspace ?? "live",
+      workspace: rule ? workspaceLabel(rule.workspace, "discord") : sourceLabel,
     },
     coverage: coverageRows,
     gap: unread?.channel_name ?? topicChannel,
     libraryThreads,
     sharedLinks: [],
-    subtopics: graph.nodes.slice(0, 6).map((node) => ({
-      label: node.label,
+    subtopics: cleanedGraph.nodes.slice(0, 6).map((node) => ({
+      label: node.fullLabel ?? node.label,
       thread_count: 1,
     })),
     announce: {
@@ -299,6 +275,7 @@ export function mapLiveView(
         ch: row.name,
         why: "Public channel from the live read",
         rule: "live",
+        url: row.url,
       })),
       blocked: [],
       contact: experts.slice(0, 3),
@@ -309,12 +286,12 @@ export function mapLiveView(
       kpis: [
         { label: "Channels read", value: `${readCount} of ${Math.max(tables.channels.length, 0)}`, note: "live" },
         { label: "Messages loaded", value: String(tables.messages.length), note: "" },
-        { label: "People", value: String(visiblePeople.length), note: "" },
-        { label: "Graph nodes", value: String(graph.nodes.length), note: "Cognee Cloud" },
+        { label: "People", value: String(experts.length), note: "" },
+        { label: "Graph nodes", value: String(cleanedGraph.nodes.length), note: "Cognee Cloud" },
       ],
       weeks: weeks.length ? weeks : [{ label: shortDate(cutoffIso), n: tables.messages.length }],
     },
-    graphNodes,
-    graphEdges,
+    graphNodes: cleanedGraph.nodes,
+    graphEdges: cleanedGraph.edges,
   };
 }

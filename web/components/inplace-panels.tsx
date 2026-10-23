@@ -5,6 +5,7 @@ import { useState } from "react";
 import { DotIcon, TickIcon } from "@/components/icons";
 import { KnowledgeGraph } from "@/components/knowledge-graph";
 import { Button } from "@/components/ui/button";
+import { openUrl } from "@/lib/copy-text";
 import {
   coverageLabel,
   postStatusLabel,
@@ -16,6 +17,7 @@ import {
 type InPlacePanelsProps = {
   panel: Panel;
   view: SampleView;
+  onToast: (message: string) => void;
 };
 
 function Avatar({ person }: { person: Pick<Person, "initials"> }) {
@@ -26,14 +28,18 @@ function Avatar({ person }: { person: Pick<Person, "initials"> }) {
   );
 }
 
-function LibraryPanel({ view }: { view: SampleView }) {
+function LibraryPanel({ view, onToast }: { view: SampleView; onToast: (message: string) => void }) {
+  const countLine =
+    view.topicUnit === "messages"
+      ? `${view.topicMessages} messages`
+      : `${view.topicThreads} threads, ${view.topicMessages} messages`;
   return (
     <>
       <div className="search">
         <label htmlFor="lib-q" className="sr-only">
           Search the library
         </label>
-        <input id="lib-q" placeholder="Search the library" defaultValue="golden set" />
+        <input id="lib-q" placeholder="Search the library" defaultValue={view.source === "sample" ? "golden set" : ""} />
       </div>
       <div className="sec">
         <span className="label">Topics</span>
@@ -52,48 +58,58 @@ function LibraryPanel({ view }: { view: SampleView }) {
         <span className="label">Note: {view.topicLabel}</span>
         <p className="summary">{view.topicSummary}</p>
         <p className="src">
-          From{" "}
-          <a href="#sources">
-            {view.topicThreads} threads, {view.topicMessages} messages
-          </a>{" "}
-          in {view.topicChannels} public channels, up to {view.topicUpTo}.
+          From {countLine} in {view.topicChannels} public channels, up to {view.topicUpTo}.
         </p>
       </div>
       <div className="sec">
         <span className="label">Source threads</span>
-        <ul className="list">
-          {view.libraryThreads.map((thread) => (
-            <li key={thread.title}>
-              <span className="grow">
-                <a href="#thread" className="ell">
-                  {thread.title}
-                </a>
-                <span className="src">
-                  {thread.authorName} · #{thread.channel} · {thread.date}
+        {view.libraryThreads.length ? (
+          <ul className="list">
+            {view.libraryThreads.map((thread) => (
+              <li key={thread.title}>
+                <span className="grow">
+                  <button
+                    type="button"
+                    className="more ell"
+                    onClick={() => {
+                      if (!openUrl(thread.url)) {
+                        onToast("No live thread link for this message.");
+                      }
+                    }}
+                  >
+                    {thread.title}
+                  </button>
+                  <span className="src">
+                    {thread.authorName} · #{thread.channel} · {thread.date}
+                  </span>
                 </span>
-              </span>
-              <span className="cnt">{thread.replies} replies</span>
-            </li>
-          ))}
-        </ul>
+                <span className="cnt">{thread.replies} replies</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="src">No source threads in this live set yet.</p>
+        )}
       </div>
       <div className="sec">
         <span className="label">Most shared links</span>
-        <ul className="list">
-          {view.sharedLinks.map((link) => (
-            <li key={link.label}>
-              <span className="grow">
-                <a href="#link" className="ell">
-                  {link.label}
-                </a>
-                <span className="src">
-                  shared {link.times === 1 ? "once" : `${link.times} times`}, first by {link.first}
+        {view.sharedLinks.length ? (
+          <ul className="list">
+            {view.sharedLinks.map((link) => (
+              <li key={link.label}>
+                <span className="grow">
+                  <span className="ell">{link.label}</span>
+                  <span className="src">
+                    shared {link.times === 1 ? "once" : `${link.times} times`}, first by {link.first}
+                  </span>
                 </span>
-              </span>
-              <span className="cnt">{link.replies} replies</span>
-            </li>
-          ))}
-        </ul>
+                <span className="cnt">{link.replies} replies</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="src">No shared links counted yet.</p>
+        )}
       </div>
     </>
   );
@@ -150,6 +166,13 @@ function ExpertsPanel({ view }: { view: SampleView }) {
               </tr>
             </thead>
             <tbody>
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="src">
+                    No named experts in this live set. Bots and unknown authors are omitted.
+                  </td>
+                </tr>
+              ) : null}
               {rows.map((person) => (
                 <tr key={person.id}>
                   <td>
@@ -171,7 +194,7 @@ function ExpertsPanel({ view }: { view: SampleView }) {
                     </div>
                   </td>
                   <td>
-                    <a href="#proof">{person.answersLine.replace(/^\d+ answers? in /, "")}</a>
+                    {person.answersLine.replace(/^\d+ (answers|messages) in /, "")}
                     <span className="src" style={{ display: "block" }}>
                       last active {person.lastActive}
                     </span>
@@ -197,6 +220,9 @@ function PostsPanel({ view }: { view: SampleView }) {
       <div className="tp-h">
         <span className="label">Private · only you see this</span>
       </div>
+      {view.myPosts.length === 0 ? (
+        <p className="src">No posts yet (0). Copy a question; nothing is sent until you paste it yourself.</p>
+      ) : (
       <ul className="list posts">
         {view.myPosts.map((post) => (
           <li key={post.text}>
@@ -222,12 +248,13 @@ function PostsPanel({ view }: { view: SampleView }) {
           </li>
         ))}
       </ul>
+      )}
       <p className="caption">Status comes from the next read of each channel. Nothing here is visible to anyone else.</p>
     </>
   );
 }
 
-function GrowthPanel({ view }: { view: SampleView }) {
+function GrowthPanel({ view, onToast }: { view: SampleView; onToast: (message: string) => void }) {
   const max = view.growth.weeks.reduce((highest, week) => Math.max(highest, week.n), 1);
   return (
     <>
@@ -261,7 +288,7 @@ function GrowthPanel({ view }: { view: SampleView }) {
                 <span className="ch">#{row.channel_name}</span>{" "}
                 <span className="muted small">{row.workspace}</span>
               </span>
-              <span className="cnt">{coverageLabel(row)}</span>
+              <span className="cnt">{coverageLabel(row, view.topicUnit)}</span>
             </li>
           ))}
         </ul>
@@ -269,7 +296,9 @@ function GrowthPanel({ view }: { view: SampleView }) {
           <span>
             Biggest gap: <span className="ch">#{view.gap}</span>
           </span>
-          <Button size="sm">Read next</Button>
+          <Button size="sm" onClick={() => onToast("Read next is the live loader. This channel stays unread until the next read.")}>
+            Read next
+          </Button>
         </div>
       </div>
       <div className="sec">
@@ -280,16 +309,16 @@ function GrowthPanel({ view }: { view: SampleView }) {
   );
 }
 
-export function InPlaceBody({ panel, view }: InPlacePanelsProps) {
+export function InPlaceBody({ panel, view, onToast }: InPlacePanelsProps) {
   switch (panel) {
     case "library":
-      return <LibraryPanel view={view} />;
+      return <LibraryPanel view={view} onToast={onToast} />;
     case "experts":
       return <ExpertsPanel view={view} />;
     case "posts":
       return <PostsPanel view={view} />;
     case "growth":
-      return <GrowthPanel view={view} />;
+      return <GrowthPanel view={view} onToast={onToast} />;
     case "compose":
       return null;
     default: {

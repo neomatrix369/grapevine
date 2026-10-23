@@ -4,9 +4,12 @@ import { useMemo, useState } from "react";
 
 import { AnnounceResults } from "@/components/announce-results";
 import { AskResults } from "@/components/ask-results";
+import { ComposeBox } from "@/components/compose-box";
 import { CloseIcon, ComposeIcon, ExpertsIcon, GrowthIcon, LibraryIcon, PostsIcon } from "@/components/icons";
 import { InPlaceBody } from "@/components/inplace-panels";
+import type { DataSource } from "@/lib/data/types";
 import { awaitingCount, type Mode, type Panel, type SampleView } from "@/lib/sample-data";
+import { useAsk } from "@/lib/use-ask";
 
 const NAV: { id: Panel; label: string; icon: typeof ComposeIcon }[] = [
   { id: "compose", label: "Compose", icon: ComposeIcon },
@@ -18,16 +21,32 @@ const NAV: { id: Panel; label: string; icon: typeof ComposeIcon }[] = [
 
 type WorkspaceAppProps = {
   view: SampleView;
+  source: DataSource;
+  onToast: (message: string) => void;
+  cueQuestion?: string;
+  cueAsked?: boolean;
+  cuePanel?: Panel | null;
+  cueMode?: Mode;
 };
 
-export function WorkspaceApp({ view }: WorkspaceAppProps) {
-  const [mode, setMode] = useState<Mode>("ask");
-  const [panel, setPanel] = useState<Panel>("compose");
-  const [draft, setDraft] = useState(view.question);
+export function WorkspaceApp({
+  view,
+  source,
+  onToast,
+  cueQuestion,
+  cueAsked,
+  cuePanel,
+  cueMode,
+}: WorkspaceAppProps) {
+  const [mode, setMode] = useState<Mode>(cueMode ?? "ask");
+  const [panel, setPanel] = useState<Panel>(cuePanel ?? "compose");
   const [selected, setSelected] = useState<string[]>(view.defaultSelected);
   const [tagged, setTagged] = useState<string[]>(view.whoToTag.map((person) => person.id));
+  const ask = useAsk(source, view, cueQuestion, cueAsked);
   const awaiting = useMemo(() => awaitingCount(view.myPosts), [view.myPosts]);
-  const hasPanel = panel !== "compose";
+  const shownPanel = cuePanel !== undefined ? (cuePanel ?? "compose") : panel;
+  const shownMode = cueMode ?? mode;
+  const hasPanel = shownPanel !== "compose";
 
   function toggleChannel(name: string) {
     setSelected((current) => {
@@ -42,7 +61,7 @@ export function WorkspaceApp({ view }: WorkspaceAppProps) {
 
   function switchMode(next: Mode) {
     setMode(next);
-    setDraft(next === "announce" ? view.announceDraft : view.question);
+    ask.setDraft(next === "announce" ? view.announceDraft : ask.draft);
   }
 
   return (
@@ -51,7 +70,7 @@ export function WorkspaceApp({ view }: WorkspaceAppProps) {
         <nav className="side" aria-label="Workspace">
           {NAV.map((item) => {
             const Icon = item.icon;
-            const current = panel === item.id;
+            const current = shownPanel === item.id;
             return (
               <button
                 key={item.id}
@@ -68,32 +87,33 @@ export function WorkspaceApp({ view }: WorkspaceAppProps) {
         </nav>
         <main>
           <div className="titlebar">
-            <h1>{mode === "announce" ? "Announce once, to the right places" : "Ask anything about our communities"}</h1>
+            <h1>{shownMode === "announce" ? "Announce once, to the right places" : "Ask anything about our communities"}</h1>
             <span className="seg" role="group" aria-label="Mode">
-              <button type="button" aria-pressed={mode === "ask"} onClick={() => switchMode("ask")}>
+              <button type="button" aria-pressed={shownMode === "ask"} onClick={() => switchMode("ask")}>
                 Ask
               </button>
-              <button type="button" aria-pressed={mode === "announce"} onClick={() => switchMode("announce")}>
+              <button type="button" aria-pressed={shownMode === "announce"} onClick={() => switchMode("announce")}>
                 Announce
               </button>
             </span>
           </div>
-          <div className="compose">
-            <label htmlFor="q" className="sr-only">
-              {mode === "announce" ? "Your announcement" : "Your question"}
-            </label>
-            <textarea
-              id="q"
-              rows={mode === "announce" ? 3 : 2}
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              placeholder={
-                mode === "announce"
-                  ? "Paste your event or hackathon announcement"
-                  : "Type your question once. Grapevine shows what is known, who knows it and where to post."
-              }
-            />
-          </div>
+          <ComposeBox
+            id="q"
+            label={shownMode === "announce" ? "Your announcement" : "Your question"}
+            draft={ask.draft}
+            rows={shownMode === "announce" ? 3 : 2}
+            placeholder={
+              shownMode === "announce"
+                ? "Paste your event or hackathon announcement"
+                : "Type your question once. Grapevine shows what is known, who knows it and where to post."
+            }
+            suggestions={shownMode === "ask" ? view.suggestedQuestions : []}
+            asking={ask.asking}
+            asked={ask.asked}
+            askLabel={shownMode === "announce" ? "Preview" : "Ask"}
+            onChange={ask.setDraft}
+            onAsk={(question) => void ask.ask(question)}
+          />
           <p className="confid">
             <span>
               Based on{" "}
@@ -106,16 +126,22 @@ export function WorkspaceApp({ view }: WorkspaceAppProps) {
               Coverage
             </button>
           </p>
-          {mode === "announce" ? (
-            <AnnounceResults view={view} />
+          {shownMode === "announce" ? (
+            <AnnounceResults view={view} draft={ask.draft} onToast={onToast} />
           ) : (
             <AskResults
               view={view}
+              draft={ask.draft}
               selected={selected}
               tagged={tagged}
+              matches={ask.matches}
+              asked={ask.asked}
+              asking={ask.asking}
+              askMessage={ask.askMessage}
               onToggleChannel={toggleChannel}
               onToggleTag={toggleTag}
               onOpenPanel={setPanel}
+              onToast={onToast}
             />
           )}
         </main>
@@ -123,14 +149,14 @@ export function WorkspaceApp({ view }: WorkspaceAppProps) {
           <aside className="inplace" aria-labelledby="ip-h">
             <div className="dh">
               <h2 id="ip-h" tabIndex={-1}>
-                {panel === "posts" ? "My posts" : panel === "library" ? "Library" : panel === "experts" ? "Experts" : "Growth"}
+                {shownPanel === "posts" ? "My posts" : shownPanel === "library" ? "Library" : shownPanel === "experts" ? "Experts" : "Growth"}
               </h2>
               <button className="x" type="button" aria-label="Close" onClick={() => setPanel("compose")}>
                 <CloseIcon />
               </button>
             </div>
             <div className="tp">
-              <InPlaceBody panel={panel} view={view} />
+              <InPlaceBody panel={shownPanel} view={view} onToast={onToast} />
             </div>
           </aside>
         ) : null}

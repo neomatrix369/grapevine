@@ -14,6 +14,7 @@ export type GraphNode = {
   id: string;
   label: string;
   kind: string;
+  fullLabel?: string;
 };
 
 export type GraphEdge = {
@@ -34,11 +35,15 @@ export type Person = {
   roles: string[];
 };
 
+export type CountUnit = "threads" | "messages";
+
 export type ChannelRow = {
   name: string;
   workspace: string;
   threads: number | null;
   status: CoverageStatus;
+  url?: string | null;
+  channelId?: string;
 };
 
 export type CoverageRow = {
@@ -55,6 +60,7 @@ export type KnownThread = {
   channel: string;
   date: string;
   replies: number;
+  url?: string | null;
 };
 
 export type MyPost = {
@@ -75,15 +81,18 @@ export type SampleView = {
   source: DataSource;
   me: { name: string };
   question: string;
+  suggestedQuestions: string[];
   announceDraft: string;
   cutoff: string;
   channelsRead: number;
   channelsTotal: number;
+  sourceLabel: string;
   known: KnownThread;
   topicLabel: string;
   topicSummary: string;
   topicThreads: number;
   topicMessages: number;
+  topicUnit: CountUnit;
   topicChannels: number;
   topicUpTo: string;
   experts: Person[];
@@ -94,11 +103,11 @@ export type SampleView = {
   crossPostRule: { id: string; text: string; workspace: string };
   coverage: CoverageRow[];
   gap: string;
-  libraryThreads: { title: string; authorName: string; channel: string; date: string; replies: number }[];
+  libraryThreads: { title: string; authorName: string; channel: string; date: string; replies: number; url?: string | null }[];
   sharedLinks: { label: string; times: number; first: string; replies: number }[];
   subtopics: { label: string; thread_count: number }[];
   announce: {
-    where: { ch: string; why: string; rule: string }[];
+    where: { ch: string; why: string; rule: string; url?: string | null }[];
     blocked: { ch: string; quote: string; rule: string; workspace: string }[];
     contact: Person[];
     bestTime: string;
@@ -176,11 +185,17 @@ export const SAMPLE: SampleView = {
   source: "sample",
   me: { name: "Robin Vale" },
   question: "How do people evaluate RAG retrieval quality before shipping?",
+  suggestedQuestions: [
+    "How do people evaluate RAG retrieval quality before shipping?",
+    "Which pgvector index do you use for under 1M rows?",
+    "Anyone versioning MCP tool schemas in CI?",
+  ],
   announceDraft:
     "RAG evals workshop, Thu 19 Nov, 18:30, near Old Street. Hands-on: build a golden set from your own tickets, then test an LLM judge against it. Looking for one more speaker.",
   cutoff: "24 Sep",
   channelsRead: 5,
   channelsTotal: 7,
+  sourceLabel: "Sample data",
   known: {
     title: "How are folks measuring retrieval quality before shipping a RAG feature?",
     snippet:
@@ -195,6 +210,7 @@ export const SAMPLE: SampleView = {
     "Members start with a golden set of about 50 real questions and track recall@5 before any LLM judge. Judges are calibrated against hand labels and re-checked when the prompt changes.",
   topicThreads: 20,
   topicMessages: 55,
+  topicUnit: "threads",
   topicChannels: 5,
   topicUpTo: "19 Oct",
   experts: [cleo, kemi, ada, jonah],
@@ -344,14 +360,15 @@ export function awaitingCount(posts: MyPost[]): number {
   return posts.filter((p) => p.status === "awaiting").length;
 }
 
-export function coverageLabel(row: CoverageRow): string {
+export function coverageLabel(row: CoverageRow, unit: CountUnit = "threads"): string {
+  const word = unit === "messages" ? (row.threads_read === 1 ? "message" : "messages") : row.threads_read === 1 ? "thread" : "threads";
   switch (row.status) {
     case "unread":
       return "Not read yet";
     case "partial":
-      return `Partly read · ${row.threads_read} threads`;
+      return `Partly read · ${row.threads_read} ${word}`;
     case "read":
-      return `${row.threads_read} threads`;
+      return `${row.threads_read} ${word}`;
     default: {
       const _exhaustive: never = row.status;
       return _exhaustive;
