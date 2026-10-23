@@ -51,4 +51,5 @@ Newest at the bottom. Slice ids in backticks.
 - 22:20 [cursor-agent-0] Header Sample/Live toggle on feat/live-data. Live reads Supabase + Cognee Cloud via /api/community; Sample stays local. Live empty/unreachable keeps the Live toggle and says so.
 - 01:55 [grok-bot] Wrote docs/planning/08-fix-live-mode.md (Cursor plan for Live-mode bugs) and HANDOFF-2026-10-23.md.
 - 02:16 [cursor] fix/live-mode: empty Ask box + suggestions, ranked matches, no unknown names, message counts, channel names, Discord-only source label, filtered Cognee graph, wired copy/open/Play demo, honest empty states.
-- 02:25 [cursor] Verified Live+Sample at 1280 and 390: header Discord, empty question + suggestions, TopD/Kat not unknown, #general/#team-up/#coupon-codes, Growth 121/26/9 messages, Play demo 1 of 9 + Stop, `pnpm test` 18/18. PR next.
+- 02:25 [cursor] Verified Live+Sample at 1280 and 390: header Discord, empty question + suggestions, TopD/Kat not unknown, #general/#team-up/#coupon-codes, Growth 121/26/9 messages, Play demo 1 of 9 + Stop, `pnpm test` 18/18.
+- 02:26 [cursor] Opened PR #11 (fix/live-mode → main): https://github.com/neomatrix369/grapevine/pull/11
