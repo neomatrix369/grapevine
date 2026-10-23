@@ -53,6 +53,7 @@ Cursor's local agent ships the app on the Mac from the prompts above, following 
 | Design tokens (light default; dark opt-in via `.dark`) | `kit/design/tokens.css`, ported into `web/app/tokens.css` |
 | Ask once, Workspace, Sample/Live toggle | `web/`. Sample from `web/lib/sample-data.ts`; Live from `/api/community` |
 | Drafted Supabase schema + `route_question()` | `supabase/migrations/0001_init.sql` |
+| Live-mode fixes (`fix/live-mode`) | Empty Ask box + suggestions; `/api/ask` ranks matches; no "unknown" experts; message counts when threads are 0; channel names not guild ids; source label from `channels.platform`; Cognee graph filtered to people/topics; copy/open/Play demo wired; honest empty/unreachable states |
 
 ## Supabase: the store and search
 **Decided 21:38 (Mani):** Supabase holds the **live** Slack and Discord messages read by Grok Bot (two weeks, public channels). The app reads Supabase; sample data is only a labelled fallback when it is empty.
