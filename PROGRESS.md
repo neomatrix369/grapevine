@@ -49,3 +49,4 @@ Newest at the bottom. Slice ids in backticks.
 - 21:45 BST [grok-bot] Live community read: read-only CDP reader (Slack 9222 / Discord 9223, loopback), Supabase loader (channels, people, messages + gte-small 384-d embeddings, coverage, graph) and Cognee Cloud ingest in reader/live/. Raw text stays out of git.
 - 22:06 [cursor-agent-0] Started the Next.js demo on port 3001 (3000 is another app). Open http://localhost:3001 (LAN: http://172.20.10.4:3001).
 - 22:20 [cursor-agent-0] Header Sample/Live toggle on feat/live-data. Live reads Supabase + Cognee Cloud via /api/community; Sample stays local. Live empty/unreachable keeps the Live toggle and says so.
+- 01:55 [grok-bot] Wrote docs/planning/08-fix-live-mode.md (Cursor plan for Live-mode bugs) and HANDOFF-2026-10-23.md.
