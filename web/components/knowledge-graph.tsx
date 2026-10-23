@@ -6,14 +6,21 @@ type KnowledgeGraphProps = {
   listHint?: boolean;
 };
 
-const CX = 200;
-const CY = 150;
-const RADIUS = 110;
+const CX = 220;
+const CY = 160;
+const VIEW = "0 0 440 340";
 
 function layoutNodes(nodes: GraphNode[]) {
+  const count = Math.max(nodes.length, 1);
+  const radius = count > 6 ? 140 : 118;
   return nodes.map((node, index) => {
-    const angle = -Math.PI / 2 + (index * 2 * Math.PI) / Math.max(nodes.length, 1) + 0.4;
-    return { node, x: CX + RADIUS * Math.cos(angle), y: CY + RADIUS * Math.sin(angle) * 0.9 };
+    const angle = -Math.PI / 2 + (index * 2 * Math.PI) / count;
+    const x = CX + radius * Math.cos(angle);
+    const y = CY + radius * Math.sin(angle) * 0.82;
+    const anchor: "end" | "start" | "middle" = x < CX - 12 ? "end" : x > CX + 12 ? "start" : "middle";
+    const lx = x < CX - 12 ? x - 16 : x > CX + 12 ? x + 16 : x;
+    const ly = y < CY ? y - 14 : y + 24;
+    return { node, x, y, lx, ly, anchor };
   });
 }
 
@@ -26,13 +33,12 @@ function LiveGraph({
   edges: GraphEdge[];
   topicLabel: string;
 }) {
-  const shown = nodes.slice(0, 8);
-  const placed = layoutNodes(shown);
+  const placed = layoutNodes(nodes);
   const byId = new Map(placed.map((item) => [item.node.id, item]));
-  const drawn = edges.filter((edge) => byId.has(edge.src) && byId.has(edge.dst)).slice(0, 24);
+  const drawn = edges.filter((edge) => byId.has(edge.src) && byId.has(edge.dst));
 
   return (
-    <svg className="graph" width="100%" viewBox="0 0 400 310" role="img" aria-label={`Cognee Cloud graph of ${shown.length} nodes.`}>
+    <svg className="graph" width="100%" viewBox={VIEW} role="img" aria-label={`Cognee Cloud graph of ${nodes.length} nodes.`}>
       {drawn.map((edge) => {
         const from = byId.get(edge.src);
         const to = byId.get(edge.dst);
@@ -52,8 +58,8 @@ function LiveGraph({
           />
         );
       })}
-      <circle cx={CX} cy={CY} r="14" fill="var(--signal)" />
-      <text x={CX} y={CY + 30} textAnchor="middle" className="mono" stroke="var(--card)" strokeWidth="4" paintOrder="stroke">
+      <circle cx={CX} cy={CY} r="12" fill="var(--signal)" />
+      <text x={CX} y={CY + 28} textAnchor="middle" className="mono" stroke="var(--card)" strokeWidth="4" paintOrder="stroke">
         {topicLabel}
       </text>
       {placed.map((item) => (
@@ -61,19 +67,20 @@ function LiveGraph({
           <circle
             cx={item.x}
             cy={item.y}
-            r="10"
+            r="9"
             fill="var(--signal-soft)"
             stroke="var(--signal-ink)"
             strokeWidth="1.5"
           />
           <text
-            x={item.x}
-            y={item.y - 16}
-            textAnchor="middle"
+            x={item.lx}
+            y={item.ly}
+            textAnchor={item.anchor}
             stroke="var(--card)"
             strokeWidth="4"
             paintOrder="stroke"
           >
+            <title>{item.node.fullLabel ?? item.node.label}</title>
             {item.node.label}
           </text>
         </g>
@@ -83,6 +90,10 @@ function LiveGraph({
 }
 
 export function KnowledgeGraph({ view, caption, listHint = false }: KnowledgeGraphProps) {
+  if (view.source === "live" && view.graphNodes.length === 0) {
+    return <p className="src">Cognee Cloud graph is unreachable. Live rows above are still from Supabase.</p>;
+  }
+
   if (view.graphNodes.length > 0) {
     return (
       <>
@@ -102,7 +113,7 @@ export function KnowledgeGraph({ view, caption, listHint = false }: KnowledgeGra
 
   return (
     <>
-      <svg className="graph" width="100%" viewBox="0 0 400 310" role="img" aria-label={aria}>
+      <svg className="graph" width="100%" viewBox={VIEW} role="img" aria-label={aria}>
         {nodes.map((node) => (
           <line
             key={`spoke-${node.person.id}`}
@@ -130,21 +141,18 @@ export function KnowledgeGraph({ view, caption, listHint = false }: KnowledgeGra
               strokeWidth="1.5"
             />
             <text
-              x={node.x}
-              y={node.y - 12 - node.person.answers}
-              textAnchor="middle"
+              x={node.lx}
+              y={node.ly}
+              textAnchor={node.anchor}
               stroke="var(--card)"
               strokeWidth="4"
               paintOrder="stroke"
             >
+              <title>{node.person.name}</title>
               {node.person.name} · {node.person.answers}
             </text>
           </g>
         ))}
-        <circle cx={CX} cy={285} r="8" fill="var(--you)" />
-        <text x={CX + 14} y={289} style={{ fill: "var(--you)" }}>
-          You
-        </text>
       </svg>
       <p className="caption">{caption}</p>
     </>

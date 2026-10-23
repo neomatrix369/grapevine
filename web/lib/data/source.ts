@@ -21,6 +21,7 @@ function unreachable(message: string, graph: GraphResponse): CommunityResponse {
     source: "live",
     status: "unreachable",
     message,
+    graphSource: graph.source,
     view: mapLiveView(EMPTY, graph),
   };
 }
@@ -63,7 +64,7 @@ export async function getCommunityData(): Promise<CommunityResponse> {
     selectRows<LiveTables["channels"][number]>(
       client,
       "channels",
-      "platform, workspace, channel_id, channel_name",
+      "platform, workspace, channel_id, channel_name, url",
     ),
     selectRows<LiveTables["people"][number]>(
       client,
@@ -73,8 +74,8 @@ export async function getCommunityData(): Promise<CommunityResponse> {
     selectRows<LiveTables["messages"][number]>(
       client,
       "messages",
-      "body, ts, url, channel_id, author_person_id, platform",
-      { column: "ts", ascending: false, limit: 80 },
+      "body, ts, url, channel_id, author_person_id, platform, thread_id",
+      { column: "ts", ascending: false, limit: 200 },
     ),
     selectRows<LiveTables["rules"][number]>(client, "rules", "rule_id, text, workspace, scope, channel_id"),
     selectRows<LiveTables["coverage"][number]>(
@@ -106,12 +107,18 @@ export async function getCommunityData(): Promise<CommunityResponse> {
   const cognee = await fetchCogneeGraph();
   const graph = cognee.nodes.length ? cognee : await fetchSupabaseGraph(client);
   const empty = tables.channels.length === 0 && tables.messages.length === 0;
+  const view = mapLiveView(tables, graph);
+  const liveLine = `Live · ${view.sourceLabel}, last 14 days`;
+  const message = empty
+    ? "No live rows in Supabase yet. Sample still has the demo path."
+    : graph.source === "none"
+      ? `${liveLine}. Cognee Cloud graph is unreachable.`
+      : liveLine;
   return {
     source: "live",
     status: empty ? "empty" : "ok",
-    message: empty
-      ? "No live rows in Supabase yet. Sample still has the demo path."
-      : "Live · Slack + Discord, last 14 days",
-    view: mapLiveView(tables, graph),
+    message,
+    graphSource: graph.source,
+    view,
   };
 }

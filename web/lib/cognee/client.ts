@@ -1,5 +1,6 @@
 import "server-only";
 
+import { sanitizeGraph } from "@/lib/data/graph-filter";
 import { hasCogneeServerEnv, readCogneeServerEnv } from "@/lib/env-server";
 import type { GraphEdge, GraphNode, GraphResponse } from "@/lib/data/types";
 
@@ -133,9 +134,6 @@ export function normalizeCogneeGraph(payload: unknown): GraphResponse {
           : "entity";
     collected.push({ id, label, kind });
   });
-  const preferred = collected.filter((node) => /entity/i.test(node.kind));
-  const nodes = (preferred.length ? preferred : collected).slice(0, 24);
-  const keep = new Set(nodes.map((node) => node.id));
   const edges: GraphEdge[] = [];
   rawEdges.forEach((item) => {
     const record = asRecord(item);
@@ -144,7 +142,7 @@ export function normalizeCogneeGraph(payload: unknown): GraphResponse {
     }
     const src = edgeEnd(record, ["source", "src", "from"]);
     const dst = edgeEnd(record, ["target", "dst", "to"]);
-    if (!src || !dst || !keep.has(src) || !keep.has(dst)) {
+    if (!src || !dst) {
       return;
     }
     const kind =
@@ -155,7 +153,8 @@ export function normalizeCogneeGraph(payload: unknown): GraphResponse {
           : "related";
     edges.push({ src, dst, kind: kind.slice(0, 60) });
   });
-  return { source: nodes.length ? "cognee" : "none", nodes, edges };
+  const cleaned = sanitizeGraph(collected, edges);
+  return { source: cleaned.nodes.length ? "cognee" : "none", nodes: cleaned.nodes, edges: cleaned.edges };
 }
 
 export async function fetchCogneeGraph(): Promise<GraphResponse> {

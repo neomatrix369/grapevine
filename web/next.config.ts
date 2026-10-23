@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   agentRules: false,
+  serverExternalPackages: ["@huggingface/transformers", "onnxruntime-node"],
   turbopack: {
     rules: {
       "*.css": {
